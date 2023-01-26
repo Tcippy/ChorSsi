@@ -4,7 +4,7 @@ import { is } from 'bpmn-js/lib/util/ModelUtil';
 import cmdHelper from 'bpmn-js-properties-panel/lib/helper/CmdHelper';
 import entryFactory from 'bpmn-js-properties-panel/lib/factory/EntryFactory';
 import eventDefinitionHelper from 'bpmn-js-properties-panel/lib/helper/EventDefinitionHelper';
-import conditionalProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/ConditionalProps.js';
+import conditionalProps from 'bpmn-js-properties-panel/lib/provider/camunda/parts/ConditionalProps';
 import messageDefinition from './MessageDefinition';
 
 export default function ChorPropertiesProvider(injector, bpmnFactory) {

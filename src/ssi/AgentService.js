@@ -3,10 +3,19 @@
 const hostname = 'localhost';
 //const port = 8041;
 
-console.log('Agent is running on: ' + `http://${hostname}:`);
-
-function httpAsync(options, body) {/* 
-    return new Promise(function (resolve, reject) {
+//console.log('Agent is running on: ' + `http://${hostname}:`);
+var invitation ={
+    "@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/connections/1.0/invitation",
+    "@id": "23a3fd0f-f3b8-4e77-a262-7f7bf69559e3",
+    "label": "registry",
+    "recipientKeys": [
+        "82GbRtGUCVVP5Stc19BC98hK667JzSDNwW8oCLo4JddF"
+    ],
+    "serviceEndpoint": "http://172.17.0.1:8050"
+}
+const httpAsync =(options, body) =>{
+    
+   /*  return new Promise(function (resolve, reject) {
         const req = http.request(options, (res) => {
             const { statusCode } = res;
             const contentType = res.headers['content-type'];
@@ -43,8 +52,8 @@ function httpAsync(options, body) {/*
         }
         
         req.end();
-    }); */
-    const headers = new Headers({
+    });  */
+   /*  const headers = new Headers({
         'Content-Type': 'application/json',
     })
     
@@ -60,7 +69,7 @@ function httpAsync(options, body) {/*
             }
             return json;
         })
-    );
+    ); */
 }
 
  class AgentService {
@@ -102,9 +111,10 @@ function httpAsync(options, body) {/*
             const response = await httpAsync({
                 hostname: hostname,
                 port: port,
-                path: '/connections/create-invitation',
+                path: '/connections/create-invitation?auto_accept=true',
                 method: 'POST'
-            });
+            }, invitation);
+            console.log("responseInvitation",response);
             return response;
         } catch (error) {
             console.error(error);
@@ -382,4 +392,4 @@ async getWalletCredential(port) {
     
 }
 
-export default AgentService();
+export default new AgentService();

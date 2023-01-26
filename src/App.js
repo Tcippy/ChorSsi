@@ -1,18 +1,18 @@
-import TopBar from "./components/topbar/TopBar.jsx";
-import Profile from "./components/profile/Profile.jsx";
-import Bpmn from "./components/bpmn/Bpmn.jsx";
+import TopBar from "./components/topbar/TopBar";
+import Profile from "./components/profile/Profile";
+import Bpmn from "./components/bpmn/Bpmn";
 import Works from "./components/works/Works";
 import "./App.scss";
 import React, { useEffect, useState } from "react";
-import Menu from "./components/menu/Menu.jsx";
-import BpmnModeler from './components/bpmn/BpmnModeler.jsx';
+import Menu from "./components/menu/Menu";
+import BpmnModeler from './components/bpmn/BpmnModeler';
 import axios from 'axios';
 
 import $ from 'jquery';
 
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { _url, _urlNuovo } from "./components/config";
-
+//import 'bootstrap/dist/css/bootstrap.css';
 function App() {
 
   const [menuOpen, setMenuOpen] = useState(false);

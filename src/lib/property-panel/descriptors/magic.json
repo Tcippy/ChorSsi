@@ -1,24 +1,33 @@
 {
-    "name": "Magic",
-    "prefix": "magic",
-    "uri": "http://magic",
-    "xml": {
-      "tagAlias": "lowerCase"
+  "name": "Magic",
+  "prefix": "magic",
+  "uri": "http://magic",
+  "xml": {
+    "tagAlias": "lowerCase"
+  },
+  "associations": [],
+  "types": [
+    {
+      "name": "BewitchedStartEvent",
+      "extends": ["bpmn:StartEvent"],
+      "properties": [
+        {
+          "name": "spell",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
     },
-    "associations": [],
-    "types": [
-      {
-        "name": "BewitchedStartEvent",
-        "extends": [
-          "bpmn:StartEvent"
-        ],
-        "properties": [
-          {
-            "name": "spell",
-            "isAttr": true,
-            "type": "String"
-          }
-        ]
-      }
-    ]
-  }
+    {
+      "name": "Tortellini",
+      "extends": ["bpmn:Participant"],
+      "properties": [
+        {
+          "name": "tortellini",
+          "isAttr": true,
+          "type": "String"
+        }
+      ]
+    }
+  ]
+}

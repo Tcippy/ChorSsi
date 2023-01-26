@@ -1,4 +1,4 @@
-import Cat from '../../lib/nyan/cat';
+//import Cat from '../../lib/nyan/cat';
 import {
   attr as svgAttr
 } from 'tiny-svg';

@@ -7,7 +7,7 @@ import {
     hulkPortfolio,
     ironmanPortfolio
 } from '../../data';
-import AgentService from '../../ssi/AgentService.js';
+import AgentService from '../../ssi/AgentService';
 import $, { get } from 'jquery';
 import { Link } from "react-router-dom";
 import add from "../../assets/add.png";

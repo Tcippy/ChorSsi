@@ -1,6 +1,6 @@
 export const emptyBpmn = `<?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="_tTv5YOycEeiHGOQ2NkJZNQ" targetNamespace="http://bpmn.io/schema/bpmn">
-  <bpmn2:choreography id="Choreography_1wp1o08" name="PropertyTransaction">
+<bpmn2:definitions xmlns:magic="http://magic" id="sample-diagram" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xs="http://www.w3.org/2001/XMLSchema" id="_tTv5YOycEeiHGOQ2NkJZNQ" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn2:choreography  id="Choreography_1wp1o08" name="PropertyTransaction">
     <bpmn2:participant id="Participant_031en92" name="Seller" />
     <bpmn2:participant id="Participant_0vb4wl7" name="Registry" />
     <bpmn2:participant id="Participant_1u1zdeg" name="Broker" />
@@ -19,7 +19,7 @@ export const emptyBpmn = `<?xml version="1.0" encoding="UTF-8"?>
     <bpmn2:messageFlow id="MessageFlow_1k1ilv5" sourceRef="Participant_1ypyzs0" targetRef="Participant_1u1zdeg" messageRef="Message_1siw4g6" />
     <bpmn2:messageFlow id="MessageFlow_093bk1t" sourceRef="Participant_031en92" targetRef="Participant_1u1zdeg" messageRef="Message_0vby74q" />
     <bpmn2:messageFlow id="MessageFlow_08kegbc" sourceRef="Participant_031en92" targetRef="Participant_0vb4wl7" messageRef="Message_0epe6o2" />
-    <bpmn2:startEvent id="Event_0bfb8ap">
+    <bpmn2:startEvent id="Event_0bfb8ap" magic:spell="WOOO ZAAAA">
       <bpmn2:outgoing>Flow_1qulg2g</bpmn2:outgoing>
     </bpmn2:startEvent>
     <bpmn2:choreographyTask id="ChoreographyTask_0axlrdi" name="Request trusted info" initiatingParticipantRef="Participant_031en92">

@@ -2,8 +2,9 @@
 
 
 module.exports = {
-    //
     resolve: {
-        fallback: { "http": false}
+        fallback: {
+            http: false,
+        },
     },
 };
