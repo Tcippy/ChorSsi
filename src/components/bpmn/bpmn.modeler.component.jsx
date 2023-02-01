@@ -10,16 +10,7 @@ import propertiesProviderModule from 'bpmn-js-properties-panel/lib/provider/bpmn
 import ChorPropertiesProvider from '../../lib/properties-provider'
 import camundaModdleDescriptor from 'camunda-bpmn-moddle/resources/camunda';
 import "./bpmn.scss";
-import { is, getBusinessObject } from 'bpmn-js/lib/util/ModelUtil';
-import { ExternalLink } from 'react-external-link';
-import $ from 'jquery';
 
-import resizeAllModule from '../../lib/resize-all-rules';
-import colorPickerModule from '../../lib/color-picker';
-import templates from '../bpmn/element-templates/data.json';
-
-import ColoredRendererModule from '../../lib/color-picker';
-import CustomRendererModule from '../renderer';
 import { _url, _urlNuovo } from '../config';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { saveAs } from "file-saver";
@@ -37,7 +28,7 @@ import magicModdleDescriptor from '../../lib/property-panel/descriptors/magic';
 import CamundaModdlePackage from "camunda-bpmn-moddle/resources/camunda";
 import CamundaModdleExtension from "camunda-bpmn-moddle/lib";
 import CamundaPropertiesProviderModule from "bpmn-js-properties-panel/lib/provider/camunda";
-//import camundaModdleDescriptor from 'camunda-bpmn-moddle/resources/camunda';
+import SSIPage from '../SSIPage/SSIPage';
 
 
 class BpmnModelerComponent extends React.Component {
@@ -271,7 +262,7 @@ class BpmnModelerComponent extends React.Component {
   }
 
   renderModel = (a) => {
-    console.log("renderModel",this.modeler.get('propertiesPanel'));
+    console.log("renderModel",this.modeler.get('canvas'));
     this.modeler.importXML(a)
     this.isDirty = false;
 

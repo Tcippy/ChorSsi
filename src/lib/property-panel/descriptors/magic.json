@@ -1,6 +1,6 @@
 {
-  "name": "Magic",
-  "prefix": "magic",
+  "name": "SSI",
+  "prefix": "ssi",
   "uri": "http://magic",
   "xml": {
     "tagAlias": "lowerCase"

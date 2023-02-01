@@ -12,7 +12,7 @@ function createMagicTabGroups(element, translate) {
   // Create a group called "Black Magic".
   var blackMagicGroup = {
     id: "black-magic",
-    label: "Black Magic",
+    label: "Self Sovereign Identity",
     entries: []/*  {
       id:"magicButton",
       label: translate("Playground properties"),
@@ -39,7 +39,7 @@ export default function MagicPropertiesProvider(propertiesPanel, translate, bpmn
       // Add the "magic" tab
       var magicTab = {
         id: "magic",
-        label: "Magic",
+        label: "SSI",
         groups: createMagicTabGroups(element, translate)
       };
 

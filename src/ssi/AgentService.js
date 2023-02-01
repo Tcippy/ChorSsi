@@ -1,4 +1,6 @@
-//const http = require('http');
+const http = require('http');
+//import http from 'http';
+
 
 const hostname = 'localhost';
 //const port = 8041;
@@ -15,7 +17,7 @@ var invitation ={
 }
 const httpAsync =(options, body) =>{
     
-   /*  return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve, reject) {
         const req = http.request(options, (res) => {
             const { statusCode } = res;
             const contentType = res.headers['content-type'];
@@ -52,7 +54,7 @@ const httpAsync =(options, body) =>{
         }
         
         req.end();
-    });  */
+    }); 
    /*  const headers = new Headers({
         'Content-Type': 'application/json',
     })
@@ -108,7 +110,9 @@ const httpAsync =(options, body) =>{
 
     async createInvitation(port) {
         try {
+            console.log(port);
             const response = await httpAsync({
+                headers: {"Content-Type":"application/json",'Access-Control-Allow-Origin': '*'},
                 hostname: hostname,
                 port: port,
                 path: '/connections/create-invitation?auto_accept=true',
