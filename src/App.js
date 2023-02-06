@@ -13,11 +13,16 @@ import $ from 'jquery';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { _url, _urlNuovo } from "./components/config";
 //import 'bootstrap/dist/css/bootstrap.css';
+import SSIPage from "./components/SSIPage/SSIPage";
+import SpellProps from "./lib/property-panel/provider/magic/parts/SpellProps";
+
 function App() {
 
   const [menuOpen, setMenuOpen] = useState(false);
 
-  
+  const [pageOpen, setPageOpen] = useState(true);
+
+ // localStorage.setItem("pageOpen","nothing");
 
 
 
@@ -42,15 +47,20 @@ function App() {
       <div className="app">
         <TopBar menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
         <Menu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-        <div className="sections">
-          <Routes>
-            <Route path="/" element={<BpmnModeler />} />
-            <Route path="/profile" element={<Profile />} />
+        <div className="sections" style={{ display:'flex', flexDirection: 'row', }}>
+          <div style={{ width: '65%', marginTop: '70px' }}>
+            <Routes>
+              <Route path="/" element={<BpmnModeler setPageOpen={setPageOpen}/>} />
+              <Route path="/profile" element={<Profile />} />
 
-            {/* <Route path="/works" element={<Works />} /> */}
-            <Route path="/bpmn/:d" element={<Bpmn />} />
-            <Route path="/bpmnModeler" element={<BpmnModeler  />} />
-          </Routes>
+              {/* <Route path="/works" element={<Works />} /> */}
+              <Route path="/bpmn/:d" element={<Bpmn />} />
+              <Route path="/bpmnModeler" element={<BpmnModeler setPageOpen={setPageOpen}/>} />
+            </Routes>
+          </div>
+          <div style={{ width: '34%', marginTop:'70px' }}>
+            <SSIPage pageOpen={pageOpen} setPageOpen={window.localStorage.getItem("pageOpen")} key={window.localStorage.getItem("pageOpen")}/>
+          </div>
         </div>
       </div>
     </Router>

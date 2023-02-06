@@ -3,13 +3,12 @@ import BpmnModelerComponent from "./bpmn.modeler.component";
 import 'bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css';
 import {Link, useLocation} from "react-router-dom";
 
-function BpmnModeler() {
+function BpmnModeler({ setPageOpen }) {
 
   return (
     <div className="bpmn" id="bpmnModeler">
-      <h1>Modeler</h1>
       <div className="container">
-        <BpmnModelerComponent />
+        <BpmnModelerComponent setPageOpen={setPageOpen} />
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import cmdHelper from 'bpmn-js-properties-panel/lib/helper/CmdHelper';
 import { _agents, _ownershipSchema } from '../../../../../ssi/config';
 import './bootstrap.css';
 import { connectAgents, receiveInvitation, createSchemaAPI, createCredDefAPI } from "../../../../../components/util/APIUtils";
+import SSIPage from "../../../../../components/SSIPage/SSIPage";
 
 var domify = require('min-dom').domify;
 
@@ -17,6 +18,9 @@ function html(name) {
   //const allConnections = await agentService.getConnections();
   
   var parsedName = name.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, '').replace(/ /g, '');
+  window.localStorage.setItem("pageOpen",parsedName);
+  window.dispatchEvent(new Event("storage"));
+  window.location.reload(false);
 
 
   console.log(name.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, '').replace(/ /g, ''));
@@ -46,7 +50,9 @@ function callBack(){
 function createSchema(){
 
   createSchemaAPI(_agents.registry.agentPort, _ownershipSchema).then(res => 
-    createCredDefAPI(_agents.registry.agentPort, res.schema_id))
+    createCredDefAPI(_agents.registry.agentPort, res.schema_id).then( cred =>{
+      window.localStorage.setItem("credDefId", cred.credential_definition_id)
+      console.log("cred",cred.credential_definition_id)}))
 }
 
 function connectParticipants(){
@@ -97,6 +103,21 @@ export default function (group, element, translate, bpmnFactory) {
       {
         id: "tortellini",
         html: html(element.businessObject.name),
+        modelProperty: "tortellini",
+        
+        //html: fdomify(element.businessObject.name)
+      }
+    );
+  }
+
+  if (is(element, "bpmn:Message")) {
+    //console.log("element", element.businessObject.name);
+    //fdomify(element.businessObject.name);
+    console.log("element", element.parent.businessObject.name);
+    group.entries.push(
+      {
+        id: "tortellini",
+        html: html(element.parent.businessObject.name),
         modelProperty: "tortellini",
         
         //html: fdomify(element.businessObject.name)

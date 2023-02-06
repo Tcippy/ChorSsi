@@ -38,6 +38,22 @@ function createInvitation(port) {
     })
 }
 
+export function getConnections(port) {
+    return request({
+        url: "http://localhost:" + port + "/connections",
+        method: 'GET',
+        /* body:{"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/connections/1.0/invitation",
+            "@id": "f833c237-71a4-4566-b77f-ca09075c051e",
+            "label": "**********seller",
+            "recipientKeys": [
+                "9uoQv1r4r4W3U8ywRMUrVrYTsSKgtDEU6LgfQKHGX8jL"
+            ],
+            "serviceEndpoint": "http://172.17.0.1:"+ entry[1].agentPort-1 
+        }  */
+        // });
+    })
+}
+
 export function connectAgents(port) {
     console.log(port);
     var invitationList = [];
@@ -62,6 +78,15 @@ export function receiveInvitation(invitation) {
     })
 }
 
+export function sendOfferAPI(port, body) {
+    console.log(body);
+    return request({
+        url: "http://localhost:" + port + "/issue-credential/send-offer",
+        method: 'POST',
+        body: JSON.stringify(body)
+    })
+}
+
 export function createSchemaAPI(port, body) {
     return request({
         url: "http://localhost:" + port + "/schemas",
@@ -76,7 +101,7 @@ export function createCredDefAPI(port, schemaId){
         "schema_id": schemaId,
         "support_revocation": true,
         "tag": "default",
-        "version": "3.0"
+        "version": "1.0"
     }
     return request({
         url: "http://localhost:" + port + "/credential-definitions",

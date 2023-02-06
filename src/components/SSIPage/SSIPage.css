@@ -1,5 +1,4 @@
-
-  .body {
+body {
     /* fallback for old browsers */
     background: #a1c4fd;
   
@@ -11,7 +10,7 @@
   }
   
   .bg-indigo {
-    background-color: #4835d4;
+    background-color: #e4443f;
   }
   
   @media (min-width: 1025px) {

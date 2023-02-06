@@ -29,6 +29,7 @@ import CamundaModdlePackage from "camunda-bpmn-moddle/resources/camunda";
 import CamundaModdleExtension from "camunda-bpmn-moddle/lib";
 import CamundaPropertiesProviderModule from "bpmn-js-properties-panel/lib/provider/camunda";
 import SSIPage from '../SSIPage/SSIPage';
+import SpellProps from '../../lib/property-panel/provider/magic/parts/SpellProps';
 
 
 class BpmnModelerComponent extends React.Component {
@@ -41,14 +42,26 @@ class BpmnModelerComponent extends React.Component {
   uniqueNames = Array.from(new Set());
   active = Array.from(new Set());
 
+
+
   constructor(props) {
     super(props);
-    this.state = { currentStatus: null, bpmn: props.xml, bpmnString: props.bpmnString }
+    this.state = { setPageOpen: props.setPageOpen, currentStatus: null, bpmn: props.xml, bpmnString: props.bpmnString }
+    var isTrueSet = (localStorage.getItem("pageOpen") === 'true');
+    this.state.setPageOpen(isTrueSet);
+    console.log("this.isTrueSet",isTrueSet);
+
   }
 
 
 
   componentDidMount = () => {
+    window.addEventListener('storage', () => {
+      console.log("Change to local storage!");
+      // ...
+  })
+    //this.state.setPageOpen(this.isTrueSet)
+    console.log("this.isTrueSet",this.isTrueSet);
     //const propertiesPanelModule = require('bpmn-js-properties-panel');
     //const propertiesProviderModule = require('bpmn-js-properties-panel/lib/provider/bpmn');
     //const ChoreoModeler = require('../../../node_modules/chor-js/lib/Modeler');
@@ -150,52 +163,7 @@ class BpmnModelerComponent extends React.Component {
 
     });
 
-    // open file dialog
-    //document.getElementById('js-open-file').addEventListener('click', e => {
-    //document.getElementById('file-input').click();
-    //});
-
-    // toggle side panels
-    /* const panels = Array.prototype.slice.call(
-      document.getElementById('panel-toggle').children
-    );
-    panels.forEach(panel => {
-      panel.addEventListener('click', () => {
-        panels.forEach(otherPanel => {
-          if (panel === otherPanel && !panel.classList.contains('active')) {
-            // show clicked panel if it is not already active, otherwise hide it as well
-            panel.classList.add('active');
-            document.getElementById(panel.dataset.togglePanel).classList.remove('hidden');
-          } else {
-            // hide all other panels
-            otherPanel.classList.remove('active');
-            document.getElementById(otherPanel.dataset.togglePanel).classList.add('hidden');
-          }
-        });
-      });
-    }); */
-
-    // create new diagram
-    /* const newDiagram = document.getElementById('js-new-diagram');
-    newDiagram.addEventListener('click', async e => {
-    //this.renderModel(blankXml);
-      this.lastFile = false;
-    }); */
-
-    // load diagram from disk
-    /* const loadDiagram = document.getElementById('file-input');
-    loadDiagram.addEventListener('change', e => {
-      const file = loadDiagram.files[0];
-      if (file) {
-        const reader = new FileReader();
-        this.lastFile = file;
-        reader.addEventListener('load', async () => {
-        this.renderModel(reader.result);
-          loadDiagram.value = null; // allows reloading the same file
-        }, false);
-        reader.readAsText(file);
-      }
-    }); */
+    
 
     // drag & drop file
     const dropZone = document.body;
@@ -222,33 +190,7 @@ class BpmnModelerComponent extends React.Component {
     });
 
 
-    // validation logic and toggle
-    /* const reporter = new Reporter(modeler);
-    const validateButton = document.getElementById('js-validate');
-    validateButton.addEventListener('click', e => {
-      this.isValidating = !this.isValidating;
-      if (this.isValidating) {
-        reporter.validateDiagram();
-        validateButton.classList.add('selected');
-        validateButton['title'] = 'Disable checking';
-      } else {
-        reporter.clearAll();
-        validateButton.classList.remove('selected');
-        validateButton['title'] = 'Check diagram for problems';
-      }
-    });
-    modeler.on('commandStack.changed', () => {
-      if (this.isValidating) {
-        reporter.validateDiagram();
-      }
-      this.isDirty = true;
-    });
-    modeler.on('import.render.complete', () => {
-      if (this.isValidating) {
-        reporter.validateDiagram();
-      }
-    }); */
-    // });
+    
   }
 
   
@@ -263,6 +205,7 @@ class BpmnModelerComponent extends React.Component {
 
   renderModel = (a) => {
     console.log("renderModel",this.modeler.get('canvas'));
+    console.log("renderModel",  document.getElementById('tortellini'));
     this.modeler.importXML(a)
     this.isDirty = false;
 
@@ -315,8 +258,8 @@ class BpmnModelerComponent extends React.Component {
         <div id="bpmnview" style={{ width: '75%', height: '100%', float: 'left' }}></div>
         <div className="modelerBPMN">
        {/*  <Link to="/profile" className='link' style={{  textDecoration: 'none' }}>
-        <button  className="downloadButton" onClick={() => { this.startExecution() }} >Execute </button></Link>
-          <button className="downloadButton1" onClick={() => { elaborateDiagram("dati dei partecipanti") }} >Status </button> */}
+        <button  className="downloadButton" onClick={() => { this.startExecution() }} >Execute </button></Link>*/}
+          <button className="downloadButton1" onClick={() => this.state.setPageOpen(this.isTrueSet)} >Status </button> 
         </div>
         
       </div>
