@@ -1,10 +1,11 @@
 import { _url } from "../config";
-import { _agents } from "../../ssi/config";
+import { _agents, _proofPresentation } from "../../ssi/config";
 
 const request = (options) => {
     const headers = new Headers({
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': '*',
+        'accept': 'application/json',
     })
 
 
@@ -42,20 +43,47 @@ export function getConnections(port) {
     return request({
         url: "http://localhost:" + port + "/connections",
         method: 'GET',
-        /* body:{"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/connections/1.0/invitation",
-            "@id": "f833c237-71a4-4566-b77f-ca09075c051e",
-            "label": "**********seller",
-            "recipientKeys": [
-                "9uoQv1r4r4W3U8ywRMUrVrYTsSKgtDEU6LgfQKHGX8jL"
-            ],
-            "serviceEndpoint": "http://172.17.0.1:"+ entry[1].agentPort-1 
-        }  */
-        // });
+
     })
 }
 
+export function getCredDefIdAPI(port) {
+    return request({
+        url: "http://localhost:" + port + "/credential-definitions/created",
+        method: 'GET',
+
+    })
+}
+
+export function getValidCredentialAPI(port, cred) {
+    return request({
+        url: "http://localhost:" + port + "/present-proof/records/" + cred + "/credentials",
+        method: 'GET',
+
+    })
+}
+
+
+export function getCredDefExchangedAPI(port) {
+    return request({
+        url: "http://localhost:" + port + "/issue-credential/records",
+        method: 'GET',
+
+    })
+}
+
+export function getPresExchangeAPI(port) {
+    return request({
+        url: "http://localhost:" + port + "/present-proof/records",
+        method: 'GET',
+
+    })
+}
+
+
+
+
 export function connectAgents(port) {
-    console.log(port);
     var invitationList = [];
 
     //Object.entries(_agents).forEach(entry => {
@@ -65,8 +93,6 @@ export function connectAgents(port) {
 }
 
 export function receiveInvitation(invitation) {
-    console.log("invitation", invitation.invitation)
-    //console.log("entry", entry[0]);
     Object.entries(_agents).forEach(entry => {
         if (entry[0] !== invitation.invitation.label) {
             return request({
@@ -78,14 +104,40 @@ export function receiveInvitation(invitation) {
     })
 }
 
+
 export function sendOfferAPI(port, body) {
-    console.log(body);
     return request({
         url: "http://localhost:" + port + "/issue-credential/send-offer",
         method: 'POST',
-        body: JSON.stringify(body)
+        body: body
     })
 }
+
+
+export function sendProofRequestAPI(port, body) {
+    return request({
+        url: "http://localhost:" + port + "/present-proof/send-request",
+        method: 'POST',
+        body: body
+    })
+}
+
+export function sendPresentationAPI(port, presEx, credential) {
+    _proofPresentation.requested_attributes.additionalProp1.cred_id = credential;
+    console.log("body", _proofPresentation);
+    try {
+        return request({
+            url: "http://localhost:" + port + "/present-proof/records/" + presEx + "/send-presentation",
+            method: 'POST',
+            body:JSON.stringify(_proofPresentation, null, 4) 
+        })
+    }catch (error) {
+        console.error("errorr:",error);
+        return [];
+    }
+}
+
+
 
 export function createSchemaAPI(port, body) {
     return request({
@@ -95,7 +147,16 @@ export function createSchemaAPI(port, body) {
     })
 }
 
-export function createCredDefAPI(port, schemaId){
+export function acceptOfferAPI(port, credDefExId) {
+    console.log("credDefExId", credDefExId)
+    return request({
+        url: "http://localhost:" + port + "/issue-credential/records/" + credDefExId + "/send-request",
+        method: 'POST'
+    })
+}
+
+
+export function createCredDefAPI(port, schemaId) {
     var credDefId = {
         "revocation_registry_size": 1000,
         "schema_id": schemaId,

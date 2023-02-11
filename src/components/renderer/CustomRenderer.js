@@ -53,7 +53,7 @@ export default class CustomRenderer extends BaseRenderer {
         const partShape = this.getShapePath(element.businessObject.$parent.participants[0]);
         console.log("partShape",this.bpmnRenderer.getShapePath("partShape"));
 
-        if(is(element.businessObject.$parent.participants[0],"bpmn:Participant")){
+        if(is(element,"bpmn:StartEvent")){
             svgAttr(shape, { fill: "green" });
         }
 

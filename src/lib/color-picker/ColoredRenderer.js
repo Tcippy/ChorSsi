@@ -10,7 +10,6 @@ import {
   is
 } from 'bpmn-js/lib/util/ModelUtil';
 
-
 export default function ColoredRenderer(
     config, eventBus, styles,
     pathMap, canvas, textRenderer) {
@@ -21,6 +20,7 @@ export default function ColoredRenderer(
     pathMap, canvas, textRenderer,
     1400
   );
+
 
   this.canRender = function(element) {
    // return is(element, 'bpmn:ChoreographyTask') && element.color;
@@ -35,7 +35,7 @@ export default function ColoredRenderer(
    //canvas._elementRegistry._elements.values();//(ele => console.log("obj",ele))
    var x= canvas._elementRegistry._elements.ChoreographyTask_08zltwe !== null ? canvas._elementRegistry._elements.ChoreographyTask_08zltwe : "pd";
    //console.log("elementRegistry",x);
-   return canvas._elementRegistry._elements.ChoreographyTask_08zltwe;
+   return element;
   };
 
   this.drawShape = function(parent, shape) {

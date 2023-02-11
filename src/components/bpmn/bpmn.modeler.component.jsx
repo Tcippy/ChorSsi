@@ -10,7 +10,9 @@ import propertiesProviderModule from 'bpmn-js-properties-panel/lib/provider/bpmn
 import ChorPropertiesProvider from '../../lib/properties-provider'
 import camundaModdleDescriptor from 'camunda-bpmn-moddle/resources/camunda';
 import "./bpmn.scss";
-
+import CustomRendererModule from '../renderer/CustomRenderer';
+import ColoredRendererModule from '../../lib/color-picker';
+import $ from 'jquery';
 import { _url, _urlNuovo } from '../config';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { saveAs } from "file-saver";
@@ -46,22 +48,17 @@ class BpmnModelerComponent extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { setPageOpen: props.setPageOpen, currentStatus: null, bpmn: props.xml, bpmnString: props.bpmnString }
+    this.state = { setPageOpen: props.setPageOpen, currentStatus: null, bpmn: props.xml, bpmnString: props.bpmnString, isLoaded: false }
     var isTrueSet = (localStorage.getItem("pageOpen") === 'true');
     this.state.setPageOpen(isTrueSet);
-    console.log("this.isTrueSet",isTrueSet);
+    console.log("this.isTrueSet", isTrueSet);
 
   }
 
 
 
   componentDidMount = () => {
-    window.addEventListener('storage', () => {
-      console.log("Change to local storage!");
-      // ...
-  })
-    //this.state.setPageOpen(this.isTrueSet)
-    console.log("this.isTrueSet",this.isTrueSet);
+
     //const propertiesPanelModule = require('bpmn-js-properties-panel');
     //const propertiesProviderModule = require('bpmn-js-properties-panel/lib/provider/bpmn');
     //const ChoreoModeler = require('../../../node_modules/chor-js/lib/Modeler');
@@ -89,16 +86,16 @@ class BpmnModelerComponent extends React.Component {
         //CamundaPropertiesProviderModule,
         //CamundaModdlePackage,
         //CustomPaletteProvider,
-        //CustomRendererModule
+        //CustomRendererModule,
         magicPropertiesProviderModule,
-       // magicModdleDescriptor
+        // magicModdleDescriptor
       ],
       keyboard: {
         bindTo: document
-      }, 
-       moddleExtensions: {
+      },
+      moddleExtensions: {
         magic: magicModdleDescriptor
-      }  
+      }
 
       //, elementTemplates: templates,
       //moddleExtensions: {
@@ -109,13 +106,15 @@ class BpmnModelerComponent extends React.Component {
     });
 
     this.renderModel(emptyBpmn);
+    this.startExecution();
+
     //this.ValidateReportDiagram(this.modeler);
   }
 
   LoadParticipant = (participant) => {
     const agentService = require('../../ssi/AgentService');
     for (var i = 0; i < _agents.length; i++) {
-      participant.forEach(part => { 
+      participant.forEach(part => {
         this.addParticipant(part.name.toLowerCase());
         if (part.name.toLowerCase() === _agents[i].name) {
           agentService.getStatus(_agents[i].port).then(response => {
@@ -123,10 +122,10 @@ class BpmnModelerComponent extends React.Component {
               //currentStatus: _agents[i].name + "up",
               currentStatus: response + " up"
             });
-            console.log("SALVO: ",response);
+            console.log("SALVO: ", response);
             this.addLabel(response);
           }).catch(error => {
-            
+
             console.log("error", error);
           });
         }
@@ -134,24 +133,24 @@ class BpmnModelerComponent extends React.Component {
     }
   }
 
-  addParticipant = (participant) =>{
-   if(!this.active.includes(participant)) {
+  addParticipant = (participant) => {
+    if (!this.active.includes(participant)) {
       this.active.push(participant);
-      localStorage.setItem("participant",this.active.reduce((acc,curr)=> acc+", "+curr));
-   }   
-    
-    
+      localStorage.setItem("participant", this.active.reduce((acc, curr) => acc + ", " + curr));
+    }
+
+
 
   }
-  addLabel = (label) =>{
+  addLabel = (label) => {
 
-    if(!this.uniqueNames.includes(label)){
+    if (!this.uniqueNames.includes(label)) {
       this.uniqueNames.push(label);
-      localStorage.setItem("status",this.uniqueNames.reduce((acc,curr)=> acc+", "+curr));
+      localStorage.setItem("status", this.uniqueNames.reduce((acc, curr) => acc + ", " + curr));
     }
-     
-   }
-  
+
+  }
+
 
   ValidateReportDiagram = (modeler) => {
     document.addEventListener('DOMContentLoaded', () => {
@@ -163,7 +162,7 @@ class BpmnModelerComponent extends React.Component {
 
     });
 
-    
+
 
     // drag & drop file
     const dropZone = document.body;
@@ -190,10 +189,10 @@ class BpmnModelerComponent extends React.Component {
     });
 
 
-    
+
   }
 
-  
+
 
   diagramName = () => {
     if (this.lastFile) {
@@ -204,11 +203,10 @@ class BpmnModelerComponent extends React.Component {
   }
 
   renderModel = (a) => {
-    console.log("renderModel",this.modeler.get('canvas'));
-    console.log("renderModel",  document.getElementById('tortellini'));
+    console.log("renderModel", this.modeler.get('canvas'));
+    console.log("renderModel", document.getElementById('tortellini'));
     this.modeler.importXML(a)
     this.isDirty = false;
-
   }
 
   openBpmnDiagram = (xml) => {
@@ -228,7 +226,38 @@ class BpmnModelerComponent extends React.Component {
 
   startExecution = () => {
 
-    const canvas = this.modeler.get('canvas');
+    var overlays = this.modeler.get('overlays');
+    //var elementRegistry = this.modeler.get('elementRegistry');
+    //localStorage.setItem("toColour", "");
+    //console.log("localStorage.getItem",localStorage.getItem("toColour").split(" "))
+    //while(elementRegistry != null ){
+    //console.log("elReg",this.modeler.get('elementRegistry').get("ChoreographyTask_0axlrdi"));
+    var arrayWithDuplicates = localStorage.getItem("toColour").split(" ");
+    var uniqueArray = arrayWithDuplicates.filter(function (elem, pos) {
+      return arrayWithDuplicates.indexOf(elem) == pos;
+    })
+    uniqueArray.forEach(el => {
+      var shape = this.modeler.get('elementRegistry').get(el);
+      if (shape != null) {
+        console.log("attivooooo")
+        var $overlayHtml =
+          $('<div class="highlight-overlay">')
+            .css({
+              width: shape.width + 10,
+              height: shape.height + 10
+            });
+
+        overlays.add(el, {
+          position: {
+            top: -5,
+            left: -5
+          },
+          html: $overlayHtml
+        });
+      }
+    });
+
+    /* const canvas = this.modeler.get('canvas');
     const rootElement = canvas.getRootElement();
     //console.log(businessObj,"businessObj");
     //print(rootElement.businessObject.flowElements).then((value)=>console.log("DAJE ROMAAA",value));
@@ -237,31 +266,31 @@ class BpmnModelerComponent extends React.Component {
     this.LoadParticipant(participant);
      
     
-    console.log("rootElem", rootElement.businessObject.participants);
+    console.log("rootElem", rootElement.businessObject.participants); */
     //console.log("currentStatus",this.state.currentStatus);
   }
 
   getDataChild = (res) => {
     //elaborateDiagram(this.state.currentStatus);
-      console.log("res", res);
-      //this.state.currentStatus;
+    console.log("res", res);
+    //this.state.currentStatus;
   }
 
   render = () => {
 
     return (
-      
+
       <div id="bpmncontainer" style={{ width: '100%', height: '100%' }} >
-        
+
         <div id="propview" style={{ width: '25%', height: '100%', float: 'right', maxHeight: '100%', overflowX: 'auto' }}></div>
         <link rel="stylesheet" type="text/html" href="styles/app.less" />
         <div id="bpmnview" style={{ width: '75%', height: '100%', float: 'left' }}></div>
         <div className="modelerBPMN">
-       {/*  <Link to="/profile" className='link' style={{  textDecoration: 'none' }}>
-        <button  className="downloadButton" onClick={() => { this.startExecution() }} >Execute </button></Link>*/}
-          <button className="downloadButton1" onClick={() => this.state.setPageOpen(this.isTrueSet)} >Status </button> 
+          {/*          <Link to="/profile" className='link' style={{  textDecoration: 'none' }}>
+ */}        <button className="downloadButton" onClick={() => { this.startExecution() }} >Execute </button>
+          {/* <button className="downloadButton1" onClick={() => this.state.setPageOpen(this.isTrueSet)} >Status </button> */}
         </div>
-        
+
       </div>
     )
   }

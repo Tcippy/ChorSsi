@@ -22,7 +22,7 @@ function App() {
 
   const [pageOpen, setPageOpen] = useState(true);
 
- // localStorage.setItem("pageOpen","nothing");
+ // localStorage.setItem("pageOpen","seller");
 
 
 

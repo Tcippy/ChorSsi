@@ -6,8 +6,11 @@ import $ from "jquery";
 import Popper from "popper.js";
 import 'bootstrap/dist/js/bootstrap.bundle'
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import { _agents, _sellerOffer } from '../../ssi/config';
-import { getConnections, sendOfferAPI } from '../util/APIUtils';
+import { _agents, _registryOffer, _proofRequest } from '../../ssi/config';
+import {
+  getConnections, sendOfferAPI, getCredDefIdAPI, getCredDefExchangedAPI,
+  acceptOfferAPI, sendProofRequestAPI, getPresExchangeAPI, getValidCredentialAPI, sendPresentationAPI
+} from '../util/APIUtils';
 
 import {
   MDBBtn,
@@ -28,33 +31,92 @@ class SSIPage extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { agentConnections: null, connId: null, credDefId: null, bodyOffer: null }
+    this.state = {
+      agentConnections: null, connId: null, credDefId: null, bodyOffer: null, credDefExId: null,
+      credDefExIdText: null, credPresExId: null, credPresExIdText: null, validCred: null, validCredText: null
+    }
 
   }
   componentDidMount = () => {
     this.getConnections();
-    
+    this.getCredentialDefinitions();
+    this.getPresExchange();
+    //this.getCredDefExchange();
+
   }
 
   handleConnIdChange = (e) => {
     this.setState({ connId: e.target.value })
-    _sellerOffer.connection_id = e.target.value;
+    _registryOffer.connection_id = e.target.value;
+    _proofRequest.connection_id = e.target.value;
+    _registryOffer.cred_def_id = document.querySelector('#selectCredDef').textContent.replace(/ /g, '');
+
+    //_proofRequest.cred_def_id = document.querySelector('#selectCredDef').textContent.replace(/ /g, '');
+
   }
 
 
   handleCredDefIdChange = (e) => {
     this.setState({ credDefId: e.target.value })
-    _sellerOffer.cred_def_id = e.target.value;
-    
+    _registryOffer.cred_def_id = e.target.value;
+  }
+
+  handleCredDefExIdChange = (e) => {
+    this.setState({ credDefExIdText: this.state.credDefExId.filter(cred => cred.credential_exchange_id === e.target.value) })
+    // this.setState({credDefExId : e.target.value})
+    //document.querySelector("#selectCredEx").textContent = this.state.credDefExId.filter(cred => cred.credential_exchange_id === e.target.value)
+    //  
+  }
+
+  handlePresExIdChange = (e) => {
+    /*  this.setState({
+       credPresExId: e.target.value
+     }) */
+    this.getValidCredential();
+
+    this.setState({
+      credPresExIdText: this.state.credPresExId.filter(cred =>
+        cred.presentation_exchange_id === e.target.value)
+    })
 
   }
 
- 
+  handleValidCred = (e) => {
+    this.setState({
+      validCredText: this.state.validCred.filter(cred =>
+        cred.cred_info.referent === e.target.value)
+    })
+  }
+
+  acceptOffer = () => {
+    acceptOfferAPI(_agents[localStorage.getItem("pageOpen")].agentPort, document.querySelector("#selectCredEx").value.replace(/ /g, '')).then(res => {
+      console.log("acceptOffer", res);
+      localStorage.setItem("toColour", localStorage.getItem("toColour") + " " + localStorage.getItem("request").split("+")[1])
+    }
+    );
+  }
 
   sendOffer = () => {
 
-    sendOfferAPI(_agents[localStorage.getItem("pageOpen")].agentPort,document.querySelector('#textAreaExample').textContent).then(offer =>
-      console.log("offer", offer));
+    sendOfferAPI(_agents[localStorage.getItem("pageOpen")].agentPort, document.querySelector('#textAreaExample').textContent).then(offer => {
+      console.log("offer", offer);
+      localStorage.setItem("toColour", localStorage.getItem("toColour") + " " + localStorage.getItem("request").split("+")[1])
+    }
+    );
+  }
+
+  sendProofRequest = () => {
+    sendProofRequestAPI(_agents[localStorage.getItem("pageOpen")].agentPort, document.querySelector('#textAreaCredDefEx').textContent).then(req => {
+      console.log("Request Proof", req);
+      localStorage.setItem("toColour", localStorage.getItem("toColour") + " " + localStorage.getItem("request").split("+")[1])
+    });
+  }
+
+  sendPresentation = () => {
+    sendPresentationAPI(_agents[localStorage.getItem("pageOpen")].agentPort, document.querySelector('#selectPresEx').value.replace(/ /g, ''), document.querySelector('#selectValidCred').value.replace(/ /g, '')).then(req => {
+      console.log("Verified Credential", req);
+      localStorage.setItem("toColour", localStorage.getItem("toColour") + " " + localStorage.getItem("request").split("+")[1])
+    });
   }
 
   getConnections = () => {
@@ -65,6 +127,53 @@ class SSIPage extends React.Component {
     )
 
   }
+
+  getCredentialDefinitions = () => {
+    getCredDefIdAPI(_agents[localStorage.getItem("pageOpen")].agentPort).then(response =>
+      this.setState({
+        credDefId: response.credential_definition_ids
+      })
+    )
+    this.getCredDefExchange();
+
+  }
+
+  getCredDefExchange = () => {
+    getCredDefExchangedAPI(_agents[localStorage.getItem("pageOpen")].agentPort).then(response => {
+      // console.log("response",response)
+
+      this.setState({
+        credDefExId: response.results
+      })
+    }
+    )
+
+  }
+
+  getPresExchange = () => {
+    getPresExchangeAPI(_agents[localStorage.getItem("pageOpen")].agentPort).then(response => {
+      console.log("response", response)
+
+      this.setState({
+        credPresExId: response.results
+      })
+    }
+    )
+  }
+
+  getValidCredential = () => {
+    getValidCredentialAPI(_agents[localStorage.getItem("pageOpen")].agentPort, document.querySelector('#selectPresEx').value.replace(/ /g, '')).then(response => {
+      console.log("validCred", response)
+
+      this.setState({
+        validCred: response
+      })
+    }
+    )
+
+  }
+
+
   //({ pageOpen, setPageOpen })
   //const [page, setPage] = useState();
 
@@ -79,13 +188,12 @@ class SSIPage extends React.Component {
   //console.log("pageOpen",pageOpen);
 
   //setPage(localStorage.getItem("pageOpen"));
-
+  //localStorage.setItem("toColour", localStorage.getItem("toColour") + " " + localStorage.getItem("request").split("+")[1]);
   render = () => {
     console.log("agentConnections", this.state.agentConnections);
-    console.log("CredStorage", localStorage.getItem("credDefId"));
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"></link>
-    switch (localStorage.getItem("pageOpen")) {
-      case localStorage.getItem("pageOpen"): return (
+    switch (localStorage.getItem("request").split("+")[0]) {
+      case "offercredential": return (
         <MDBContainer fluid className='h-custom' style={{ width: '100%', marginTop: '50px' }} >
 
           <MDBRow className='d-flex justify-content-center align-items-center h-100' style={{ width: '110%' }}>
@@ -103,7 +211,7 @@ class SSIPage extends React.Component {
                       <div>
                         <FloatingLabel controlId="floatingSelect" label="Select a Connection ID" style={{}}>
                           <Form.Select aria-label='mecojoni' size="lg" value={this.state.connId != null ? this.state.connId : " "} onChange={this.handleConnIdChange} style={{}} >
-                          <option value=""   hidden></option>
+                            <option value="" hidden></option>
                             {this.state.agentConnections != null ? this.state.agentConnections.map((entry) =>
                               <option key={entry.connection_id} value={entry.connection_id}>
                                 {entry.their_label + "    " + entry.connection_id}</option>) : <option value="1">One</option>}
@@ -111,15 +219,17 @@ class SSIPage extends React.Component {
                         </FloatingLabel>
                       </div>
                       <div style={{ marginTop: "5px" }}>
-                        <FloatingLabel controlId="floatingSelect" label="Select a Credential Definition ID"  style={{}}>
-                          <Form.Select aria-label='mecojoni' size="lg"  value={this.state.credDefId != null ? this.state.credDefId : " "} onSelect={this.handleCredDefIdChange} onChange={this.handleCredDefIdChange} style={{}} >
-                          <option value=""   hidden></option>
-                          <option key={localStorage.getItem("credDefId")} value={localStorage.getItem("credDefId")}>{localStorage.getItem("credDefId")}</option>
+                        <FloatingLabel controlId="floatingSelect" label="Select a Credential Definition ID" style={{}}>
+                          <Form.Select aria-label='mecojoni' size="lg" id="selectCredDef" value={this.state.credDefId != null ? this.state.credDefId : " "} onSelect={this.handleCredDefIdChange} onChange={this.handleCredDefIdChange} style={{}} >
+                            <option value="" hidden> </option>
+                            {this.state.credDefId != null ? this.state.credDefId > 1 ? this.state.credDefId.map((entry) =>
+                              <option key={entry} value={entry}>
+                                {entry}</option>) : <option value={this.state.credDefId[0]}>{this.state.credDefId[0]}</option> : <option value=' '> </option>}
                           </Form.Select>
                         </FloatingLabel>
                       </div>
                       <div style={{ width: '100%' }}>
-                        <MDBTextArea label='Body' size='lg' value={JSON.stringify(_sellerOffer, null, 4)} id='textAreaExample' style={{ backgroundColor: 'white', marginTop: '5px', width: '100%' }} rows={18} />
+                        <MDBTextArea label='Credential to offer' size='lg' value={JSON.stringify(_registryOffer, null, 4)} id='textAreaExample' style={{ backgroundColor: 'white', marginTop: '5px', width: '100%' }} rows={18} />
                       </div>
                       <div style={{ marginTop: "40px" }}>
                         <MDBBtn color='light' size='lg' type='submit' onClick={this.sendOffer}>Register</MDBBtn>
@@ -135,6 +245,154 @@ class SSIPage extends React.Component {
           </MDBRow>
 
         </MDBContainer>);
+      case "acceptcredential": return (
+        <MDBContainer fluid className='h-custom' style={{ width: '100%', marginTop: '50px' }} >
+
+          <MDBRow className='d-flex justify-content-center align-items-center h-100' style={{ width: '110%' }}>
+            <MDBCol col='12' className='' style={{ width: '100%', height: '100%', }}>
+
+              <MDBCard className='card-registration card-registration-2' style={{ borderRadius: '15px', width: '100%', height: '100%' }}>
+
+                <MDBCardBody className='p-0' style={{ width: '100%', height: '100%' }}>
+
+                  <MDBRow style={{ width: '100%', height: '100%' }}>
+
+                    <MDBCol md='6' className='bg-indigo p-5' style={{ width: '100%', height: '100%', }}>
+
+                      <h3 className="fw-normal mb-5 text-white" style={{ color: '#4835d4', width: '100%' }}>{localStorage.getItem("pageOpen").toUpperCase()}</h3>
+
+                      <div style={{ marginTop: "5px" }}>
+                        <FloatingLabel controlId="floatingSelect" label="Select a Credential Exchange ID" style={{}}>
+                          <Form.Select aria-label='mecojoni' size="lg" id="selectCredEx" onSelect={this.handleCredDefExIdChange} onChange={this.handleCredDefExIdChange} style={{}} >
+                            <option value="" hidden> </option>
+                            {this.state.credDefExId != null ? this.state.credDefExId.length > 1 ? this.state.credDefExId.filter(cred => cred.state === "offer_received").map((entry) =>
+                              <option key={entry.credential_exchange_id} value={entry.credential_exchange_id}>
+                                {entry.credential_exchange_id}</option>) : <option value={this.state.credDefExId != null ? this.state.credDefExId[0].credential_exchange_id : " "}>{this.state.credDefExId != null ? this.state.credDefExId[0].credential_exchange_id : " "}</option> : <option value=' '>nada </option>}
+                          </Form.Select>
+                        </FloatingLabel>
+                      </div>
+                      <div style={{ width: '100%' }}>
+                        <MDBTextArea readonly label='Offered Credential' size='lg' value={this.state.credDefExIdText != null ? JSON.stringify(this.state.credDefExIdText, null, 4) : ""} id='textAreaCredDefEx' style={{ backgroundColor: 'white', marginTop: '5px', width: '100%' }} rows={18} />
+                      </div>
+                      <div style={{ marginTop: "40px" }}>
+                        <MDBBtn color='light' size='lg' onClick={this.acceptOffer}>Accept</MDBBtn>
+                      </div>
+                    </MDBCol>
+                  </MDBRow>
+
+                </MDBCardBody>
+
+              </MDBCard>
+
+            </MDBCol>
+          </MDBRow>
+
+        </MDBContainer>
+      )
+      case "requestproof": return (
+        <MDBContainer fluid className='h-custom' style={{ width: '100%', marginTop: '50px' }} >
+
+          <MDBRow className='d-flex justify-content-center align-items-center h-100' style={{ width: '110%' }}>
+            <MDBCol col='12' className='' style={{ width: '100%', height: '100%', }}>
+
+              <MDBCard className='card-registration card-registration-2' style={{ borderRadius: '15px', width: '100%', height: '100%' }}>
+
+                <MDBCardBody className='p-0' style={{ width: '100%', height: '100%' }}>
+
+                  <MDBRow style={{ width: '100%', height: '100%' }}>
+
+                    <MDBCol md='6' className='bg-indigo p-5' style={{ width: '100%', height: '100%', }}>
+
+                      <h3 className="fw-normal mb-5 text-white" style={{ color: '#4835d4', width: '100%' }}>{localStorage.getItem("pageOpen").toUpperCase()}</h3>
+
+                      <div>
+                        <FloatingLabel controlId="floatingSelect" label="Select a Connection ID" style={{}}>
+                          <Form.Select aria-label='mecojoni' size="lg" value={this.state.connId != null ? this.state.connId : " "} onChange={this.handleConnIdChange} style={{}} >
+                            <option value="" hidden></option>
+                            {this.state.agentConnections != null ? this.state.agentConnections.map((entry) =>
+                              <option key={entry.connection_id} value={entry.connection_id}>
+                                {entry.their_label + "    " + entry.connection_id}</option>) : <option value="1">One</option>}
+                          </Form.Select>
+                        </FloatingLabel>
+                      </div>
+                      <div style={{ width: '100%' }}>
+                        <MDBTextArea label='Request proof' size='lg' value={JSON.stringify(_proofRequest, null, 4)} id='textAreaCredDefEx' style={{ backgroundColor: 'white', marginTop: '5px', width: '100%' }} rows={18} />
+                      </div>
+                      <div style={{ marginTop: "40px" }}>
+                        <MDBBtn color='light' size='lg' onClick={this.sendProofRequest}>Request</MDBBtn>
+                      </div>
+                    </MDBCol>
+                  </MDBRow>
+
+                </MDBCardBody>
+
+              </MDBCard>
+
+            </MDBCol>
+          </MDBRow>
+
+        </MDBContainer>
+      );
+      case "presentproof": return (
+        <MDBContainer fluid className='h-custom' style={{ width: '100%', marginTop: '50px' }} >
+
+          <MDBRow className='d-flex justify-content-center align-items-center h-100' style={{ width: '110%' }}>
+            <MDBCol col='12' className='' style={{ width: '100%', height: '100%', }}>
+
+              <MDBCard className='card-registration card-registration-2' style={{ borderRadius: '15px', width: '100%', height: '100%' }}>
+
+                <MDBCardBody className='p-0' style={{ width: '100%', height: '100%' }}>
+
+                  <MDBRow style={{ width: '100%', height: '100%' }}>
+
+                    <MDBCol md='6' className='bg-indigo p-5' style={{ width: '100%', height: '100%', }}>
+
+                      <h3 className="fw-normal mb-5 text-white" style={{ color: '#4835d4', width: '100%' }}>{localStorage.getItem("pageOpen").toUpperCase()}</h3>
+
+                      <div>
+                        <FloatingLabel controlId="floatingSelect" label="Select a Presentation Exchange ID" style={{}}>
+                          <Form.Select aria-label='mecojoni' id="selectPresEx" size="lg" onChange={this.handlePresExIdChange} style={{}} >
+                            <option value="" hidden></option>
+                            {this.state.credPresExId !== null ? this.state.credPresExId.length > 1 ? this.state.credPresExId.filter(cred => cred.state === "request_received").map((entry) =>
+                              <option key={entry.presentation_exchange_id} value={entry.presentation_exchange_id}>
+                                {entry.presentation_exchange_id}</option>) : <option value={this.state.credPresExId[0] !== undefined ? this.state.credPresExId[0].presentation_exchange_id : " "}>
+                              {this.state.credPresExId[0] !== undefined ? this.state.credPresExId[0].presentation_exchange_id : " "}</option> : <option value=' '>nada </option>}
+                          </Form.Select>
+                        </FloatingLabel>
+                      </div>
+                      <div style={{ width: '100%' }}>
+                        <MDBTextArea readonly label='Request received' size='lg' value={JSON.stringify(this.state.credPresExIdText, null, 4)} id='textAreaPresEx' style={{ backgroundColor: 'white', marginTop: '5px', width: '100%' }} rows={8} />
+                      </div>
+                      <div style={{ width: '100%', marginTop: "5px" }}>
+                        <FloatingLabel controlId="floatingSelect" label="Select a valid Credential" style={{}}>
+                          <Form.Select aria-label='mecojoni' id="selectValidCred" size="lg" onChange={this.handleValidCred} style={{}} >
+                            <option value="" hidden></option>
+                            {this.state.validCred != null ? this.state.validCred.length > 1 ? this.state.validCred.map((entry) =>
+                              <option key={entry.cred_info.referent} value={entry.cred_info.referent}>
+                                {entry.cred_info.referent}</option>) : <option value={this.state.validCred != null ? this.state.validCred[0].cred_info.referent : " "}>
+                              {this.state.validCred != null ? this.state.validCred[0].cred_info.referent : " "}</option> : <option value=' '>nada </option>}
+                          </Form.Select>
+                        </FloatingLabel>
+                      </div>
+                      <div style={{ width: '100%' }}>
+                        <MDBTextArea readonly label='Credential' size='lg' value={JSON.stringify(this.state.validCredText, null, 4)} id='textAreaPresEx' style={{ backgroundColor: 'white', marginTop: '5px', width: '100%' }} rows={8} />
+                      </div>
+
+                      <div style={{ marginTop: "40px" }}>
+                        <MDBBtn color='light' size='lg' onClick={this.sendPresentation}>Request</MDBBtn>
+                      </div>
+                    </MDBCol>
+                  </MDBRow>
+
+                </MDBCardBody>
+
+              </MDBCard>
+
+            </MDBCol>
+          </MDBRow>
+
+        </MDBContainer>
+      )
       default: return (
         <MDBContainer fluid className='h-custom' style={{ width: '100%', marginTop: '50px', backgroundColor: '#e4443f' }} >
           <h3 className="fw-normal mb-5 text-white" style={{ color: '#4835d4', width: '100%' }}>Click a Message to start the workflow </h3>
