@@ -4,7 +4,7 @@ import { is } from "bpmn-js/lib/util/ModelUtil";
 import properties from 'bpmn-js-properties-panel/lib/provider/camunda/parts/implementation/Properties';
 import elementHelper from 'bpmn-js-properties-panel/lib/helper/ElementHelper';
 import cmdHelper from 'bpmn-js-properties-panel/lib/helper/CmdHelper';
-import { _agents, _ownershipSchema } from '../../../../../ssi/config';
+import { _agents, _offerPropertySchema, _ownershipSchema, _mortgageSchema } from '../../../../../ssi/config';
 import './bootstrap.css';
 import { connectAgents, receiveInvitation, createSchemaAPI, createCredDefAPI } from "../../../../../components/util/APIUtils";
 import SSIPage from "../../../../../components/SSIPage/SSIPage";
@@ -20,13 +20,16 @@ function html(name, messageName, id) {
 
   var parsedName = name.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, '').replace(/ /g, '');
   var parsedMessageName = messageName.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, '').replace(/ /g, '');
-  window.localStorage.setItem("request", parsedMessageName+"+"+id);
-  console.log("item",localStorage.getItem("request").split("+")[0])
+  window.localStorage.setItem("request", parsedMessageName + "+" + id);
+  console.log("item", localStorage.getItem("request").split("+")[0])
   window.localStorage.setItem("pageOpen", parsedName);
 
   window.dispatchEvent(new Event("storage"));
   window.location.reload(false);
 
+  /*  if(parsedMessageName === 'propertyoffer'){
+     createSchema(_agents.broker.agentPort, _offerPropertySchema);
+   } */
 
   console.log(name.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, '').replace(/ /g, ''));
   var url = "http://localhost:" + _agents[parsedName].intPort;
@@ -41,17 +44,60 @@ function html(name, messageName, id) {
 
 };
 
+function allPossibleCombinations(list, maxLen) {
+  // Copy initial values as arrays
+  var perm = list.map(function(val) {
+      return [val];
+  });
+  // Our permutation generator
+  var generate = function(perm, maxLen, currLen) {
+      // Reached desired length
+      if (currLen === maxLen) {
+          return perm;
+      }
+      // For each existing permutation
+      for (var i = 0, len = perm.length; i < len; i++) {
+          var currPerm = perm.shift();
+          // Create new permutation
+          for (var k = 0; k < list.length; k++) {
+              perm.push(currPerm.concat(list[k]));
+          }
+      }
+      // Recurse
+      return generate(perm, maxLen, currLen + 1);
+  };
+  // Start with size 1 because of initial values
+  return generate(perm, maxLen, 1);
+
+
+}
+
 function callBack(name) {
   try {
-    createSchema();
-    Object.entries(_agents).forEach(entry => {
+    var arr = Object.entries(_agents).map(item => item[1].agentPort);
+
+    const output = [];
+    
+    for (let i = 0; i < arr.length - 1; i++) {
+      for (let j = i + 1; j < arr.length; j++) {
+       // output.push(`${arr[i]} - ${arr[j]}`);
+        connectAgents(arr[i])[0].then(res => {
+          receiveInvitation(res, arr[j])
+          console.log("invitator:"+arr[i]+"receiver:"+arr[j])
+        })
+      }
+    }
+    
+   // console.log("output",output);
+    //createSchema(_agents.registry.agentPort,_ownershipSchema);
+    /* Object.entries(_agents).forEach(entry => {
       var port = entry[1].agentPort;
-      connectAgents(port)[0].then(res => {
+       connectAgents(port)[0].then(res => {
         receiveInvitation(res)
 
       }
-      )
-    });
+      ) 
+    }); */
     window.localStorage.setItem("toColour", name);
   } catch (error) {
     console.log(error);
@@ -65,13 +111,33 @@ function createDef(port, schema) {
   });
 }
 
-function createSchema() {
-
-  createSchemaAPI(_agents.registry.agentPort, _ownershipSchema).then(res => {
+function createSchema() {/* 
+  console.log("createSchema", schema);
+  createSchemaAPI(port, schema).then(res => {
     console.log("schemaa", res)
     createDef(_agents.registry.agentPort, res.schema_id)
   });
+ */
+  createSchemaAPI(_agents.broker.agentPort, _ownershipSchema).then(res => {
+    console.log("schemaa", createCredDefAPI(_agents.registry.agentPort, res.schema_id))
 
+
+
+  });
+
+  createSchemaAPI(_agents.broker.agentPort, _offerPropertySchema).then(res => {
+    console.log("schemaa", createCredDefAPI(_agents.broker.agentPort, res.schema_id))
+
+  }
+  );
+
+
+  createSchemaAPI(_agents.sellersbank.agentPort, _mortgageSchema).then(res => {
+    console.log("schemaa", createCredDefAPI(_agents.sellersbank.agentPort, res.schema_id)
+    )
+
+  }
+  );
 
 }
 
@@ -80,7 +146,11 @@ function connectParticipants() {
   return domify('<div class="bpp-field-wrapper"' +
     '<div class="bpp-properties-entry" ' + 'data-show="show"' + '>' +
     '<label for="tortellini">' + "Click to initialize the system" + '</label>' +
-    '<button type="button"  class="btn btn-outline-primary" data-action="connectElement" ><span>Initialize</span></button>' +
+    '<button type="button"  class="btn btn-outline-primary" data-action="connectElement" ><span>Connect Participants</span></button>' +
+    '</div>' +
+    '<div class="bpp-properties-entry" ' + 'data-show="show"' + '>' +
+    '<label for="tortellini">' + "Click to initialize the system" + '</label>' +
+    '<button type="button"  class="btn btn-outline-primary" data-action="createCredDef" ><span>Create Credentials</span></button>' +
     '</div>' +
     "</div>");
 }
@@ -94,18 +164,7 @@ export default function (group, element, translate, bpmnFactory) {
 
 
   if (is(element, "bpmn:StartEvent")) {
-    console.log("elementtt", element.businessObject.id);
-   // for (var x = 0; x < document.getElementsByClassName('djs-element').length; x++) {
-     // if (document.getElementsByClassName('djs-element').item(x).textContent === "Seller") {
-        //console.log("dentro",document.getElementsByClassName('djs-element').item(x).getAttribute("data-element-id"));
-        //document.getElementsByClassName('djs-element').item(x).style.fill="green";
-        
-        //console.log("dentrooo", document.querySelectorAll('[data-element-id="ChoreographyTask_0axlrdi"]')[0].getAttribute("data-element-id"));
-     // }
-
-      //console.log(document.getElementsByClassName('djs-element').item(x).textContent)
-   // }
-    //console.log("document", );
+    
     window.localStorage.setItem("request", "null");
     group.entries.push(
       {
@@ -114,8 +173,11 @@ export default function (group, element, translate, bpmnFactory) {
         modelProperty: "tortellini",
         connectElement: function () {
 
-          console.log("sto dentro connectElement");
           return callBack(element.businessObject.id)
+        },
+        createCredDef: function () {
+
+          return createSchema()
         }
       }
       /* entryFactory.textField(translate, {

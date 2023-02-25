@@ -20,7 +20,6 @@ import ChoreoModeler from 'chor-js/lib/Modeler';
 import Reporter from '../../lib/validator/Validator';
 //import getConnectedElements from '../../lib/validator/util/ValidatorUtil';
 //import elaborateDiagram from '../../ssi/ElaborateDiagram';
-import { _agents } from '../../ssi/config';
 import Profile from '../profile/Profile'
 import { response } from '../../ssi/AgentService';
 import elaborateDiagram from '../../ssi/ElaborateDiagram';
@@ -32,6 +31,8 @@ import CamundaModdleExtension from "camunda-bpmn-moddle/lib";
 import CamundaPropertiesProviderModule from "bpmn-js-properties-panel/lib/provider/camunda";
 import SSIPage from '../SSIPage/SSIPage';
 import SpellProps from '../../lib/property-panel/provider/magic/parts/SpellProps';
+import { _agents, _mortgageSchema, _offerPropertySchema, _ownershipSchema } from "../../ssi/config";
+import { createCredDefAPI, createSchemaAPI } from "../../components/util/APIUtils";
 
 
 class BpmnModelerComponent extends React.Component {
@@ -48,10 +49,12 @@ class BpmnModelerComponent extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { setPageOpen: props.setPageOpen, currentStatus: null, bpmn: props.xml, bpmnString: props.bpmnString, isLoaded: false }
+    this.state = {
+      setPageOpen: props.setPageOpen, currentStatus: null, bpmn: props.xml,
+      bpmnString: props.bpmnString, isLoaded: false, arrayWithDuplicates: localStorage.getItem("toColour").split(" ")
+    }
     var isTrueSet = (localStorage.getItem("pageOpen") === 'true');
     this.state.setPageOpen(isTrueSet);
-    console.log("this.isTrueSet", isTrueSet);
 
   }
 
@@ -104,12 +107,13 @@ class BpmnModelerComponent extends React.Component {
 
       // },
     });
-
     this.renderModel(emptyBpmn);
-    this.startExecution();
-
+    //window.addEventListener('storage', () => this.startExecution() );
+    //this.colorOverlay();
+    //Event_0bfb8ap
     //this.ValidateReportDiagram(this.modeler);
   }
+
 
   LoadParticipant = (participant) => {
     const agentService = require('../../ssi/AgentService');
@@ -122,7 +126,6 @@ class BpmnModelerComponent extends React.Component {
               //currentStatus: _agents[i].name + "up",
               currentStatus: response + " up"
             });
-            console.log("SALVO: ", response);
             this.addLabel(response);
           }).catch(error => {
 
@@ -203,14 +206,19 @@ class BpmnModelerComponent extends React.Component {
   }
 
   renderModel = (a) => {
-    console.log("renderModel", this.modeler.get('canvas'));
-    console.log("renderModel", document.getElementById('tortellini'));
-    this.modeler.importXML(a)
+    //this.modeler.importXML(a)
+    
+   this.modeler.importXML(a, () => {
+      //const elementRegistry = modeler.get('elementRegistry');
+    this.startExecution();
+      //const element = elementRegistry.get('New_activity_risk_audit ');
+    
+      // ...
+    });
     this.isDirty = false;
   }
 
   openBpmnDiagram = (xml) => {
-    console.log("openBpmnDiagram");
     this.modeler.importXML(xml, (error) => {
       if (error) {
         return console.log('fail import xml');
@@ -221,53 +229,59 @@ class BpmnModelerComponent extends React.Component {
     });
   }
 
+  colorOverlay = (element) => {
+    //await this.modeler.importXML(diagramXML);
+    var overlays = this.modeler.get('overlays'),
+    canvas = this.modeler.get('canvas'),
+     elementRegistry = this.modeler.get('elementRegistry'),
+     modeling = this.modeler.get('modeling');
+    //var elementToColor = elementRegistry.get('Event_0bfb8ap');
+    var elementToColor = elementRegistry.get(element);
 
+    console.log("overlay",elementToColor)
+    canvas.addMarker(element, 'highlight');
+
+    
+    /* modeling.setColor([elementToColor], {
+      stroke: 'red',
+      fill: 'rgb(152, 203, 152)'
+    }); */
+  }
 
 
   startExecution = () => {
-
-    var overlays = this.modeler.get('overlays');
-    //var elementRegistry = this.modeler.get('elementRegistry');
-    //localStorage.setItem("toColour", "");
-    //console.log("localStorage.getItem",localStorage.getItem("toColour").split(" "))
-    //while(elementRegistry != null ){
-    //console.log("elReg",this.modeler.get('elementRegistry').get("ChoreographyTask_0axlrdi"));
-    var arrayWithDuplicates = localStorage.getItem("toColour").split(" ");
-    var uniqueArray = arrayWithDuplicates.filter(function (elem, pos) {
-      return arrayWithDuplicates.indexOf(elem) == pos;
-    })
-    uniqueArray.forEach(el => {
-      var shape = this.modeler.get('elementRegistry').get(el);
-      if (shape != null) {
-        console.log("attivooooo")
-        var $overlayHtml =
-          $('<div class="highlight-overlay">')
-            .css({
-              width: shape.width + 10,
-              height: shape.height + 10
-            });
-
-        overlays.add(el, {
-          position: {
-            top: -5,
-            left: -5
-          },
-          html: $overlayHtml
-        });
-      }
-    });
-
-    /* const canvas = this.modeler.get('canvas');
-    const rootElement = canvas.getRootElement();
-    //console.log(businessObj,"businessObj");
-    //print(rootElement.businessObject.flowElements).then((value)=>console.log("DAJE ROMAAA",value));
-
-    const participant = rootElement.businessObject.participants;
-    this.LoadParticipant(participant);
-     
     
-    console.log("rootElem", rootElement.businessObject.participants); */
-    //console.log("currentStatus",this.state.currentStatus);
+      var canvas = this.modeler.get('canvas');
+      var overlays = this.modeler.get('overlays');
+      //var arrayWithDuplicates = localStorage.getItem("toColour").split(" ");
+      var arrayWithDuplicates = this.state.arrayWithDuplicates;
+      var uniqueArray = arrayWithDuplicates.filter(function (elem, pos) {
+        return arrayWithDuplicates.indexOf(elem) == pos;
+      })
+      console.log("startExecutionCOlor",uniqueArray.length);
+      uniqueArray.forEach(el => {
+        console.log("el", el)
+        var shape = this.modeler.get('elementRegistry').get(el);
+        if (shape != null) {
+          console.log("attivooooo")
+          //canvas.addMarker(shape, 'highlight');
+
+          var $overlayHtml =
+            $('<div class="highlight-overlay">')
+              .css({
+                width: shape.width + 10,
+                height: shape.height + 10
+              });
+
+          overlays.add(el, {
+            position: {
+              top: -5,
+              left: -5
+            },
+            html: $overlayHtml
+          });
+        }
+      });
   }
 
   getDataChild = (res) => {
@@ -277,7 +291,45 @@ class BpmnModelerComponent extends React.Component {
   }
 
   render = () => {
+    //this.startExecution();
+    if(this.modeler != null){
+      var canvas = this.modeler.get('canvas');
+      var overlays = this.modeler.get('overlays');
+      //var arrayWithDuplicates = localStorage.getItem("toColour").split(" ");
+      var arrayWithDuplicates = this.state.arrayWithDuplicates;
+      var uniqueArray = arrayWithDuplicates.filter(function (elem, pos) {
+        return arrayWithDuplicates.indexOf(elem) == pos;
+      })
+      console.log("startExecutionCOlor",uniqueArray.length);
+      uniqueArray.forEach(el => {
+        console.log("el", el)
+        var elementRegistry = this.modeler.get('elementRegistry');
+        console.log("elementResgistry",elementRegistry);
+        var shape = elementRegistry.get(el);
+        console.log("shape",el+" "+shape);
 
+        if (shape != null) {
+          console.log("attivooooo")
+          canvas.addMarker(shape, 'highlight');
+
+          /* var $overlayHtml =
+            $('<div class="highlight-overlay">')
+              .css({
+                width: shape.width + 10,
+                height: shape.height + 10
+              });
+
+          overlays.add(el, {
+            position: {
+              top: -5,
+              left: -5
+            },
+            html: $overlayHtml
+          });*/
+        } 
+      });
+    }
+   
     return (
 
       <div id="bpmncontainer" style={{ width: '100%', height: '100%' }} >
@@ -287,7 +339,7 @@ class BpmnModelerComponent extends React.Component {
         <div id="bpmnview" style={{ width: '75%', height: '100%', float: 'left' }}></div>
         <div className="modelerBPMN">
           {/*          <Link to="/profile" className='link' style={{  textDecoration: 'none' }}>
- */}        <button className="downloadButton" onClick={() => { this.startExecution() }} >Execute </button>
+ */}        <button className="downloadButton" onClick={() => { localStorage.setItem("toColour", " ") }} >Reset Colours </button>
           {/* <button className="downloadButton1" onClick={() => this.state.setPageOpen(this.isTrueSet)} >Status </button> */}
         </div>
 

@@ -1,9 +1,13 @@
 @import "../../global.scss";
 
 .highlight-overlay {
-    background-color: green; /* color elements as green */
+    background-color: green; 
     opacity: 0.4;
-    pointer-events: none; /* no pointer events, allows clicking through onto the element */
+    pointer-events: none; 
+  }
+
+.highlight:not(.djs-connection) .djs-visual > :nth-child(1) {
+    fill: green !important; /* color elements as green */
   }
   
 .split {
@@ -121,15 +125,15 @@
         color: white;
         background-color: crimson;
         //padding: 10px 25px;
-        //border-radius: 20px;
+        border-radius: 20px;
         font-size: 20px;
         border: 0px;
         cursor: pointer;
 
-        position: relative;
-        //height: 40px;
+        position: fixed;
+        height: 40px;
         //width: 100%;
-        //top: -20px;
+        bottom: 20px;
 
         @include mobile{
             

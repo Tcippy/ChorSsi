@@ -92,17 +92,19 @@ export function connectAgents(port) {
     return invitationList;
 }
 
-export function receiveInvitation(invitation) {
-    Object.entries(_agents).forEach(entry => {
-        if (entry[0] !== invitation.invitation.label) {
-            return request({
-                url: "http://localhost:" + entry[1].agentPort + "/connections/receive-invitation?auto_accept=true&multi_use=true",
-                method: 'POST',
-                body: JSON.stringify(invitation.invitation)
-            });
-        }
-    })
+export function receiveInvitation(invitation, receiver) {
+    var arr = Object.entries(_agents).map(item => item[1].agentPort);
+    //console.log("provaaa", Object.entries(_agents)[i][1].agentPort)
+
+/*      if (entry[0] !== invitation.invitation.label) {
+ */        return request({
+            url: "http://localhost:" + receiver + "/connections/receive-invitation?auto_accept=true&multi_use=true",
+            method: 'POST',
+            body: JSON.stringify(invitation.invitation)
+        });
+   // } 
 }
+
 
 
 export function sendOfferAPI(port, body) {
@@ -129,10 +131,10 @@ export function sendPresentationAPI(port, presEx, credential) {
         return request({
             url: "http://localhost:" + port + "/present-proof/records/" + presEx + "/send-presentation",
             method: 'POST',
-            body:JSON.stringify(_proofPresentation, null, 4) 
+            body: JSON.stringify(_proofPresentation, null, 4)
         })
-    }catch (error) {
-        console.error("errorr:",error);
+    } catch (error) {
+        console.error("errorr:", error);
         return [];
     }
 }
@@ -140,11 +142,17 @@ export function sendPresentationAPI(port, presEx, credential) {
 
 
 export function createSchemaAPI(port, body) {
-    return request({
-        url: "http://localhost:" + port + "/schemas",
-        method: 'POST',
-        body: JSON.stringify(body)
-    })
+    try {
+        return request({
+            url: "http://localhost:" + port + "/schemas",
+            method: 'POST',
+            body: JSON.stringify(body, null, 4)
+        })
+    } catch (error) {
+        console.error("errorschema:", error);
+        return [];
+    }
+
 }
 
 export function acceptOfferAPI(port, credDefExId) {
