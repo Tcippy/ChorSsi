@@ -97,6 +97,7 @@ class SSIPage extends React.Component {
     acceptOfferAPI(_agents[localStorage.getItem("pageOpen")].agentPort, document.querySelector("#selectCredEx").value.replace(/ /g, '')).then(res => {
       console.log("acceptOffer", res);
       window.localStorage.setItem("toColour", localStorage.getItem("toColour") + " " + localStorage.getItem("request").split("+")[1])
+      window.localStorage.setItem("split", '');
       window.dispatchEvent(new Event("storage"));
       window.location.reload(false);
     }
@@ -108,6 +109,7 @@ class SSIPage extends React.Component {
     sendOfferAPI(_agents[localStorage.getItem("pageOpen")].agentPort, document.querySelector('#textAreaExample').textContent).then(offer => {
       console.log("offer", offer);
       window.localStorage.setItem("toColour", localStorage.getItem("toColour") + " " + localStorage.getItem("request").split("+")[1])
+      window.localStorage.setItem("split", '');
       window.dispatchEvent(new Event("storage"));
       window.location.reload(false);
     }
@@ -119,6 +121,7 @@ class SSIPage extends React.Component {
     sendProofRequestAPI(_agents[localStorage.getItem("pageOpen")].agentPort, document.querySelector('#textAreaCredDefEx').textContent).then(req => {
       console.log("Request Proof", req);
       window.localStorage.setItem("toColour", localStorage.getItem("toColour") + " " + localStorage.getItem("request").split("+")[1])
+      window.localStorage.setItem("split", '');
       window.dispatchEvent(new Event("storage"));
       window.location.reload(false);
     });
@@ -128,6 +131,7 @@ class SSIPage extends React.Component {
     sendPresentationAPI(_agents[localStorage.getItem("pageOpen")].agentPort, document.querySelector('#selectPresEx').value.replace(/ /g, ''), document.querySelector('#selectValidCred').value.replace(/ /g, '')).then(req => {
       console.log("Verified Credential", req);
       window.localStorage.setItem("toColour", localStorage.getItem("toColour") + " " + localStorage.getItem("request").split("+")[1])
+      window.localStorage.setItem("split", '');
       window.dispatchEvent(new Event("storage"));
       window.location.reload(false);
 

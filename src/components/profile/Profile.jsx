@@ -9,11 +9,7 @@ import {
 } from '../../data';
 import AgentService from '../../ssi/AgentService';
 import $, { get } from 'jquery';
-import { Link } from "react-router-dom";
-import add from "../../assets/add.png";
-import axios from 'axios';
 import { _url, _urlNuovo, _urlResources } from "../config";
-import provideDiagram from "../../ssi/ElaborateDiagram";
 import StatusBar from '../statusBar/StatusBar'
 
 const Profile = (props) => {

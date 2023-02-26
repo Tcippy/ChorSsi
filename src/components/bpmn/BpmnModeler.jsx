@@ -6,8 +6,8 @@ import {Link, useLocation} from "react-router-dom";
 function BpmnModeler({ setPageOpen }) {
 
   return (
-    <div className="bpmn" id="bpmnModeler">
-      <div className="container">
+    <div className="bpmn" id="bpmnModeler" >
+      <div className="containers" style={{width:'100%'}}>
         <BpmnModelerComponent setPageOpen={setPageOpen} />
       </div>
     </div>

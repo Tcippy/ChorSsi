@@ -164,7 +164,8 @@ export default function (group, element, translate, bpmnFactory) {
 
 
   if (is(element, "bpmn:StartEvent")) {
-    
+
+    window.localStorage.setItem("split", '');
     window.localStorage.setItem("request", "null");
     group.entries.push(
       {
@@ -205,6 +206,7 @@ export default function (group, element, translate, bpmnFactory) {
   }
 
   if (is(element, "bpmn:Message")) {
+    window.localStorage.setItem("split", 'active');
 
     //console.log("element", element.businessObject.name);
     //fdomify(element.businessObject.name);

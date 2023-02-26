@@ -1,20 +1,12 @@
 import TopBar from "./components/topbar/TopBar";
 import Profile from "./components/profile/Profile";
-import Bpmn from "./components/bpmn/Bpmn";
-import Works from "./components/works/Works";
 import "./App.scss";
 import React, { useEffect, useState } from "react";
 import Menu from "./components/menu/Menu";
 import BpmnModeler from './components/bpmn/BpmnModeler';
-import axios from 'axios';
-
-import $ from 'jquery';
-
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { _url, _urlNuovo } from "./components/config";
-//import 'bootstrap/dist/css/bootstrap.css';
 import SSIPage from "./components/SSIPage/SSIPage";
-import SpellProps from "./lib/property-panel/provider/magic/parts/SpellProps";
 
 function App() {
 
@@ -42,9 +34,11 @@ function App() {
     </div>
   ); */
 
+  //window.localStorage.setItem("split", '');
+
   return (
     <Router>
-      <div className="app">
+      {/* <div className="app">
         <TopBar menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
         <Menu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
         <div className="sections" style={{ display:'flex', flexDirection: 'row', }}>
@@ -53,7 +47,6 @@ function App() {
               <Route path="/" element={<BpmnModeler setPageOpen={setPageOpen}/>} />
               <Route path="/profile" element={<Profile />} />
 
-              {/* <Route path="/works" element={<Works />} /> */}
               <Route path="/bpmn/:d" element={<Bpmn />} />
               <Route path="/bpmnModeler" element={<BpmnModeler setPageOpen={setPageOpen}/>} />
             </Routes>
@@ -62,6 +55,20 @@ function App() {
             <SSIPage pageOpen={pageOpen} setPageOpen={window.localStorage.getItem("pageOpen")} key={window.localStorage.getItem("pageOpen")}/>
           </div>
         </div>
+      </div> */}
+      <div className="app" style={{  display:'flex', flexDirection: 'row', }}>
+        <TopBar menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+        <Menu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+        <div className={"sections " + (window.localStorage.getItem("split"))} >
+            <Routes>
+              <Route path="/" element={<BpmnModeler setPageOpen={setPageOpen}/>} />
+              <Route path="/profile" element={<Profile />} />
+             <Route path="/bpmnModeler" element={<BpmnModeler setPageOpen={setPageOpen}/>} />
+            </Routes>
+        </div>
+        {localStorage.getItem("split") === "active" ? <div style={{ width: '34%', marginTop:'10px' }}>
+            <SSIPage pageOpen={pageOpen} setPageOpen={window.localStorage.getItem("pageOpen")} key={window.localStorage.getItem("pageOpen")}/>
+          </div> : <div style={{ width: '0%', marginTop:'70px' }}></div>}
       </div>
     </Router>
   );

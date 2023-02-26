@@ -1,19 +1,25 @@
 .app{
     height: 100vh;
-    //border: 10px solid green;
 
     .sections{
+
         width: 100%;
         height: calc(100vh - 70px);
         background-color: white;
         //position: fixed;
-        top: 80px;
+        position: relative;
+        top: 70px;
         //display: inline-block;
-        //overflow-x: hidden; // fondamentale siummmm
-        //scroll-behavior: smooth;
-        //scroll-snap-type: y mandatory;
-        //scrollbar-width: none;  // for firefox
-        /* &::-webkit-scrollbar{
+        overflow-x: hidden; // fondamentale siummmm
+        scroll-behavior: smooth;
+        scroll-snap-type: y mandatory;
+        scrollbar-width: none;  // for firefox
+        &.active{
+            width: 65%;
+
+        }
+         &::-webkit-scrollbar{
+             
             display: none;
         }
 
@@ -21,7 +27,7 @@
             width: 100%;
             height: calc(100vh - 70px);
             scroll-snap-align: start;
-        } */
+        } 
     }
 }
 

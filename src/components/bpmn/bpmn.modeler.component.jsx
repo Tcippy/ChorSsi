@@ -18,11 +18,8 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { saveAs } from "file-saver";
 import ChoreoModeler from 'chor-js/lib/Modeler';
 import Reporter from '../../lib/validator/Validator';
-//import getConnectedElements from '../../lib/validator/util/ValidatorUtil';
-//import elaborateDiagram from '../../ssi/ElaborateDiagram';
 import Profile from '../profile/Profile'
 import { response } from '../../ssi/AgentService';
-import elaborateDiagram from '../../ssi/ElaborateDiagram';
 //import esm from 'esm';
 import magicPropertiesProviderModule from '../../lib/property-panel/provider/magic';
 import magicModdleDescriptor from '../../lib/property-panel/descriptors/magic';
@@ -61,10 +58,6 @@ class BpmnModelerComponent extends React.Component {
 
 
   componentDidMount = () => {
-
-    //const propertiesPanelModule = require('bpmn-js-properties-panel');
-    //const propertiesProviderModule = require('bpmn-js-properties-panel/lib/provider/bpmn');
-    //const ChoreoModeler = require('../../../node_modules/chor-js/lib/Modeler');
     this.modeler = new ChoreoModeler({
       container: '#bpmnview',
       keyboard: {
@@ -77,19 +70,7 @@ class BpmnModelerComponent extends React.Component {
         propertiesPanelModule,
         //ChorPropertiesProvider,
         propertiesProviderModule,
-        //templates,
-        //Validator
-        //gatto
-        //resizeAllModule,
-        //colorPickerModule,
-        //nyanDrawModule,
-        //nyanPaletteModule,
-        //ColoredRendererModule,
 
-        //CamundaPropertiesProviderModule,
-        //CamundaModdlePackage,
-        //CustomPaletteProvider,
-        //CustomRendererModule,
         magicPropertiesProviderModule,
         // magicModdleDescriptor
       ],
@@ -100,18 +81,10 @@ class BpmnModelerComponent extends React.Component {
         magic: magicModdleDescriptor
       }
 
-      //, elementTemplates: templates,
-      //moddleExtensions: {
-      //camunda: camundaModdleDescriptor,
-      //camunda: CamundaModdlePackage
 
-      // },
     });
     this.renderModel(emptyBpmn);
-    //window.addEventListener('storage', () => this.startExecution() );
-    //this.colorOverlay();
-    //Event_0bfb8ap
-    //this.ValidateReportDiagram(this.modeler);
+
   }
 
 
@@ -207,12 +180,12 @@ class BpmnModelerComponent extends React.Component {
 
   renderModel = (a) => {
     //this.modeler.importXML(a)
-    
-   this.modeler.importXML(a, () => {
+
+    this.modeler.importXML(a, () => {
       //const elementRegistry = modeler.get('elementRegistry');
-    this.startExecution();
+      this.startExecution();
       //const element = elementRegistry.get('New_activity_risk_audit ');
-    
+
       // ...
     });
     this.isDirty = false;
@@ -232,16 +205,16 @@ class BpmnModelerComponent extends React.Component {
   colorOverlay = (element) => {
     //await this.modeler.importXML(diagramXML);
     var overlays = this.modeler.get('overlays'),
-    canvas = this.modeler.get('canvas'),
-     elementRegistry = this.modeler.get('elementRegistry'),
-     modeling = this.modeler.get('modeling');
+      canvas = this.modeler.get('canvas'),
+      elementRegistry = this.modeler.get('elementRegistry'),
+      modeling = this.modeler.get('modeling');
     //var elementToColor = elementRegistry.get('Event_0bfb8ap');
     var elementToColor = elementRegistry.get(element);
 
-    console.log("overlay",elementToColor)
+    console.log("overlay", elementToColor)
     canvas.addMarker(element, 'highlight');
 
-    
+
     /* modeling.setColor([elementToColor], {
       stroke: 'red',
       fill: 'rgb(152, 203, 152)'
@@ -250,38 +223,38 @@ class BpmnModelerComponent extends React.Component {
 
 
   startExecution = () => {
-    
-      var canvas = this.modeler.get('canvas');
-      var overlays = this.modeler.get('overlays');
-      //var arrayWithDuplicates = localStorage.getItem("toColour").split(" ");
-      var arrayWithDuplicates = this.state.arrayWithDuplicates;
-      var uniqueArray = arrayWithDuplicates.filter(function (elem, pos) {
-        return arrayWithDuplicates.indexOf(elem) == pos;
-      })
-      console.log("startExecutionCOlor",uniqueArray.length);
-      uniqueArray.forEach(el => {
-        console.log("el", el)
-        var shape = this.modeler.get('elementRegistry').get(el);
-        if (shape != null) {
-          console.log("attivooooo")
-          //canvas.addMarker(shape, 'highlight');
 
-          var $overlayHtml =
-            $('<div class="highlight-overlay">')
-              .css({
-                width: shape.width + 10,
-                height: shape.height + 10
-              });
+    var canvas = this.modeler.get('canvas');
+    var overlays = this.modeler.get('overlays');
+    //var arrayWithDuplicates = localStorage.getItem("toColour").split(" ");
+    var arrayWithDuplicates = this.state.arrayWithDuplicates;
+    var uniqueArray = arrayWithDuplicates.filter(function (elem, pos) {
+      return arrayWithDuplicates.indexOf(elem) == pos;
+    })
+    console.log("startExecutionCOlor", uniqueArray.length);
+    uniqueArray.forEach(el => {
+      console.log("el", el)
+      var shape = this.modeler.get('elementRegistry').get(el);
+      if (shape != null) {
+        console.log("attivooooo")
+        //canvas.addMarker(shape, 'highlight');
 
-          overlays.add(el, {
-            position: {
-              top: -5,
-              left: -5
-            },
-            html: $overlayHtml
-          });
-        }
-      });
+        var $overlayHtml =
+          $('<div class="highlight-overlay">')
+            .css({
+              width: shape.width + 10,
+              height: shape.height + 10
+            });
+
+        overlays.add(el, {
+          position: {
+            top: -5,
+            left: -5
+          },
+          html: $overlayHtml
+        });
+      }
+    });
   }
 
   getDataChild = (res) => {
@@ -291,55 +264,17 @@ class BpmnModelerComponent extends React.Component {
   }
 
   render = () => {
-    //this.startExecution();
-    if(this.modeler != null){
-      var canvas = this.modeler.get('canvas');
-      var overlays = this.modeler.get('overlays');
-      //var arrayWithDuplicates = localStorage.getItem("toColour").split(" ");
-      var arrayWithDuplicates = this.state.arrayWithDuplicates;
-      var uniqueArray = arrayWithDuplicates.filter(function (elem, pos) {
-        return arrayWithDuplicates.indexOf(elem) == pos;
-      })
-      console.log("startExecutionCOlor",uniqueArray.length);
-      uniqueArray.forEach(el => {
-        console.log("el", el)
-        var elementRegistry = this.modeler.get('elementRegistry');
-        console.log("elementResgistry",elementRegistry);
-        var shape = elementRegistry.get(el);
-        console.log("shape",el+" "+shape);
-
-        if (shape != null) {
-          console.log("attivooooo")
-          canvas.addMarker(shape, 'highlight');
-
-          /* var $overlayHtml =
-            $('<div class="highlight-overlay">')
-              .css({
-                width: shape.width + 10,
-                height: shape.height + 10
-              });
-
-          overlays.add(el, {
-            position: {
-              top: -5,
-              left: -5
-            },
-            html: $overlayHtml
-          });*/
-        } 
-      });
-    }
-   
+  
     return (
 
       <div id="bpmncontainer" style={{ width: '100%', height: '100%' }} >
+        <link rel="stylesheet" type="text/html" href="styles/app.less" />
 
         <div id="propview" style={{ width: '25%', height: '100%', float: 'right', maxHeight: '100%', overflowX: 'auto' }}></div>
-        <link rel="stylesheet" type="text/html" href="styles/app.less" />
         <div id="bpmnview" style={{ width: '75%', height: '100%', float: 'left' }}></div>
         <div className="modelerBPMN">
           {/*          <Link to="/profile" className='link' style={{  textDecoration: 'none' }}>
- */}        <button className="downloadButton" onClick={() => { localStorage.setItem("toColour", " ") }} >Reset Colours </button>
+          */}        <button className="downloadButton" onClick={() => { localStorage.setItem("toColour", " ") }} >Reset Colours </button>
           {/* <button className="downloadButton1" onClick={() => this.state.setPageOpen(this.isTrueSet)} >Status </button> */}
         </div>
 
