@@ -7,8 +7,9 @@ import VerifiedIcon from '@mui/icons-material/Verified';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { grey } from '@mui/material/colors';
 import { _agents } from '../../ssi/config';
+import { event } from 'jquery';
 
-function StatusBar() {
+function StatusBar({ onValue }) {
 
   var active = localStorage.getItem("status").split(", ");
   var allPart = Object.keys(_agents);
@@ -18,6 +19,7 @@ function StatusBar() {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    onValue(newValue)
   };
 
   return (
@@ -38,9 +40,9 @@ function StatusBar() {
             //sx={{'& .MuiButtonBase-root':{backgroundColor:'black'}}}
             icon={<VerifiedIcon style={{ color: "green" }} />}
             iconPosition="bottom"
-            value={allPart.indexOf(name) === 0 ? "one" : allPart.indexOf(name)}
+            value={allPart.indexOf(name) === 0 ? "one" : _agents[name].agentPort}
             key={name}
-            onClick={localStorage.setItem("profilePort",_agents[name].agentPort) }
+            //onClick={}
             label={name}
             wrapped
           />

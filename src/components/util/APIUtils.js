@@ -46,9 +46,27 @@ export function getConnections(port) {
     })
 }
 
+
+export function getCredentialWalletAPI(port) {
+    return request({
+        url: "http://localhost:" + port + "/credentials",
+        method: 'GET',
+
+    })
+}
+
+
 export function getCredDefIdAPI(port) {
     return request({
         url: "http://localhost:" + port + "/credential-definitions/created",
+        method: 'GET',
+
+    })
+}
+
+export function getCredDefIdDetailsAPI(port, credId) {
+    return request({
+        url: "http://localhost:" + port + "/credential-definitions/" + credId,
         method: 'GET',
 
     })
