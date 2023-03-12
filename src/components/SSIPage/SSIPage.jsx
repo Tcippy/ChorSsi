@@ -148,38 +148,38 @@ class SSIPage extends React.Component {
   }
 
   callCredDef() {
-   /*  if (localStorage.getItem("request").split("+")[0] === 'offercredential') {
-      if (this.state.createOwnershipbool === false) {
-        createSchemaAPI(_agents.broker.agentPort, _ownershipSchema).then(res => {
-          console.log("schemaa", res)
-          createCredDefAPI(_agents.registry.agentPort, res.schema_id)
-        }
-        ).then(this.getCredentialDefinitions());
-        this.setState({ createOwnershipbool: true })
-      };
-
-    }
-    if (localStorage.getItem("request").split("+")[0] === 'propertyoffer') {
-      if (this.state.createPropertybool === false) {
-        createSchemaAPI(_agents.broker.agentPort, _offerPropertySchema).then(res => {
-          console.log("schemaa", res)
-          createCredDefAPI(_agents.broker.agentPort, res.schema_id)
-        }
-        ).then(this.getCredentialDefinitions());
-        this.setState({ createPropertybool: true })
-      };
-    }
-    if (localStorage.getItem("request").split("+")[0] === 'mortgagedeedsoffer') {
-      if (this.state.createMortgagebool === false) {
-        createSchemaAPI(_agents.sellersbank.agentPort, _mortgageSchema).then(res => {
-          console.log("schemaa", res)
-          createCredDefAPI(_agents.sellersbank.agentPort, res.schema_id)
-
-        }
-        ).then(this.getCredentialDefinitions());
-        this.setState({ createMortgagebool: true })
-      };
-    } */
+    /*  if (localStorage.getItem("request").split("+")[0] === 'offercredential') {
+       if (this.state.createOwnershipbool === false) {
+         createSchemaAPI(_agents.broker.agentPort, _ownershipSchema).then(res => {
+           console.log("schemaa", res)
+           createCredDefAPI(_agents.registry.agentPort, res.schema_id)
+         }
+         ).then(this.getCredentialDefinitions());
+         this.setState({ createOwnershipbool: true })
+       };
+ 
+     }
+     if (localStorage.getItem("request").split("+")[0] === 'propertyoffer') {
+       if (this.state.createPropertybool === false) {
+         createSchemaAPI(_agents.broker.agentPort, _offerPropertySchema).then(res => {
+           console.log("schemaa", res)
+           createCredDefAPI(_agents.broker.agentPort, res.schema_id)
+         }
+         ).then(this.getCredentialDefinitions());
+         this.setState({ createPropertybool: true })
+       };
+     }
+     if (localStorage.getItem("request").split("+")[0] === 'mortgagedeedsoffer') {
+       if (this.state.createMortgagebool === false) {
+         createSchemaAPI(_agents.sellersbank.agentPort, _mortgageSchema).then(res => {
+           console.log("schemaa", res)
+           createCredDefAPI(_agents.sellersbank.agentPort, res.schema_id)
+ 
+         }
+         ).then(this.getCredentialDefinitions());
+         this.setState({ createMortgagebool: true })
+       };
+     } */
 
   }
 
@@ -245,6 +245,8 @@ class SSIPage extends React.Component {
   //setPage(localStorage.getItem("pageOpen"));
   //localStorage.setItem("toColour", localStorage.getItem("toColour") + " " + localStorage.getItem("request").split("+")[1]);
   render = () => {
+    { this.state.credDefExId != null ? console.log("this.state.credDefExId", this.state.credDefExId) : console.log("nullo") }
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"></link>
     switch (localStorage.getItem("request").split("+")[0]) {
       case "offercredential":
@@ -264,7 +266,7 @@ class SSIPage extends React.Component {
                       <MDBCol md='6' className='bg-indigo p-5' style={{ width: '100%', height: '100%', }}>
 
                         <h3 className="fw-normal mb-5 text-white" style={{ color: '#4835d4', width: '100%' }}>
-                        {localStorage.getItem("pageOpen").toUpperCase()+": "+localStorage.getItem("request").split("+")[0]}</h3>
+                          {localStorage.getItem("pageOpen").toUpperCase() + ": " + localStorage.getItem("request").split("+")[0]}</h3>
                         <div>
                           <FloatingLabel controlId="floatingSelect" label="Select a Connection ID" style={{}}>
                             <Form.Select aria-label='mecojoni' size="lg" value={this.state.connId != null ? this.state.connId : " "} onChange={this.handleConnIdChange} style={{}} >
@@ -279,17 +281,21 @@ class SSIPage extends React.Component {
                           <FloatingLabel controlId="floatingSelect" label="Select a Credential Definition ID" style={{}}>
                             <Form.Select aria-label='mecojoni' size="lg" id="selectCredDef" value={this.state.credDefId != null ? this.state.credDefId : " "} onSelect={this.handleCredDefIdChange} onChange={this.handleCredDefIdChange} style={{}} >
                               <option value="" hidden> </option>
-                              {this.state.credDefId != null ? this.state.credDefId > 1 ? this.state.credDefId.map((entry) =>
+                              {this.state.credDefId != null ? this.state.credDefId >=1 ? this.state.credDefId.map((entry) =>
                                 <option key={entry} value={entry}>
                                   {entry}</option>) : <option value={this.state.credDefId[0]}>{this.state.credDefId[0]}</option> : <option value=' '> </option>}
                             </Form.Select>
                           </FloatingLabel>
                         </div>
                         <div style={{ width: '100%' }}>
-                          <MDBTextArea label='Credential to offer' size='lg' value={
-                            JSON.stringify(localStorage.getItem("request").split("+")[0] === "offercredential" ? _registryOffer
-                              : localStorage.getItem("request").split("+")[0] === "propertyoffer" ? _propertyOffer : _mortgageOffer, null, 4)}
-                            id='textAreaExample' style={{ backgroundColor: 'white', marginTop: '5px', width: '100%' }} rows={18} />
+                      {/*  { Object.entries(_agents).map(item => item).forEach(entry => entry[0] === localStorage.getItem("pageOpen").trim(" ") ?    
+                           <div style={{ width: '100%' }}> <MDBTextArea label='Credential to offer' size='lg' value={JSON.stringify(entry[1].offer,null,4)} id='textAreaExample' 
+                            style={{ backgroundColor: 'white', marginTop: '5px', width: '100%' }} rows={18} /> {console.log("uguali",entry[0] )} </div> : 
+                            <div style={{ width: '100%' }}></div>)}  */}
+                        <MDBTextArea label='Credential to offer' size='lg' defaultValue={
+                          JSON.stringify(localStorage.getItem("request").split("+")[0] === "offercredential" ? _registryOffer
+                            : localStorage.getItem("request").split("+")[0] === "propertyoffer" ? _propertyOffer : _mortgageOffer, null, 4)}
+                          id='textAreaExample' style={{ backgroundColor: 'white', marginTop: '5px', width: '100%' }} rows={18} /> 
                         </div>
                         <div style={{ marginTop: "40px" }}>
                           <MDBBtn color='light' size='lg' type='submit' onClick={this.sendOffer}>Register</MDBBtn>
@@ -324,16 +330,17 @@ class SSIPage extends React.Component {
                       <MDBCol md='6' className='bg-indigo p-5' style={{ width: '100%', height: '100%', }}>
 
                         <h3 className="fw-normal mb-5 text-white" style={{ color: '#4835d4', width: '100%' }}>
-                        {localStorage.getItem("pageOpen").toUpperCase()+": "+localStorage.getItem("request").split("+")[0]}</h3>
-                       
+                          {localStorage.getItem("pageOpen").toUpperCase() + ": " + localStorage.getItem("request").split("+")[0]}</h3>
+
 
                         <div style={{ marginTop: "5px" }}>
                           <FloatingLabel controlId="floatingSelect" label="Select a Credential Exchange ID" style={{}}>
                             <Form.Select aria-label='mecojoni' size="lg" id="selectCredEx" onSelect={this.handleCredDefExIdChange} onChange={this.handleCredDefExIdChange} style={{}} >
                               <option value="" hidden> </option>
-                              {this.state.credDefExId != null ? this.state.credDefExId.length > 1 ? this.state.credDefExId.filter(cred => cred.state === "offer_received").map((entry) =>
+                              {this.state.credDefExId != null ? this.state.credDefExId.length >=1 ? this.state.credDefExId.filter(cred => cred.state === "offer_received").map((entry) =>
                                 <option key={entry.credential_exchange_id} value={entry.credential_exchange_id}>
-                                  {entry.credential_exchange_id}</option>) : <option value={this.state.credDefExId != null ? this.state.credDefExId[0].credential_exchange_id : " "}>{this.state.credDefExId != null ? this.state.credDefExId[0].credential_exchange_id : " "}</option> : <option value=' '>nada </option>}
+                                  {entry.credential_exchange_id}</option>) : <option value={this.state.credDefExId.length >=1 ? this.state.credDefExId[0].credential_exchange_id : " "}>
+                                {this.state.credDefExId >=1 ? this.state.credDefExId[0].credential_exchange_id : " "}</option> : <option value=' '>nada </option>}
                             </Form.Select>
                           </FloatingLabel>
                         </div>
@@ -370,8 +377,8 @@ class SSIPage extends React.Component {
                     <MDBCol md='6' className='bg-indigo p-5' style={{ width: '100%', height: '100%', }}>
 
                       <h3 className="fw-normal mb-5 text-white" style={{ color: '#4835d4', width: '100%' }}>
-                      {localStorage.getItem("pageOpen").toUpperCase()+": "+localStorage.getItem("request").split("+")[0]}</h3>
-                     
+                        {localStorage.getItem("pageOpen").toUpperCase() + ": " + localStorage.getItem("request").split("+")[0]}</h3>
+
 
                       <div>
                         <FloatingLabel controlId="floatingSelect" label="Select a Connection ID" style={{}}>
@@ -384,7 +391,7 @@ class SSIPage extends React.Component {
                         </FloatingLabel>
                       </div>
                       <div style={{ width: '100%' }}>
-                        <MDBTextArea label='Request proof' size='lg' value={JSON.stringify(localStorage.getItem("request").split("+")[1] === "broker" ?_proofRequest : _mortgageRequest, null, 4)} id='textAreaCredDefEx' style={{ backgroundColor: 'white', marginTop: '5px', width: '100%' }} rows={18} />
+                        <MDBTextArea label='Request proof' size='lg' defaultValue={JSON.stringify(localStorage.getItem("request").split("+")[1] === "broker" ? _proofRequest : _mortgageRequest, null, 4)} id='textAreaCredDefEx' style={{ backgroundColor: 'white', marginTop: '5px', width: '100%' }} rows={18} />
                       </div>
                       <div style={{ marginTop: "40px" }}>
                         <MDBBtn color='light' size='lg' onClick={this.sendProofRequest}>Request</MDBBtn>
@@ -416,17 +423,17 @@ class SSIPage extends React.Component {
                     <MDBCol md='6' className='bg-indigo p-5' style={{ width: '100%', height: '100%', }}>
 
                       <h3 className="fw-normal mb-5 text-white" style={{ color: '#4835d4', width: '100%' }}>
-                        {localStorage.getItem("pageOpen").toUpperCase()+": "+localStorage.getItem("request").split("+")[0]}</h3>
-                     
+                        {localStorage.getItem("pageOpen").toUpperCase() + ": " + localStorage.getItem("request").split("+")[0]}</h3>
+
 
                       <div>
                         <FloatingLabel controlId="floatingSelect" label="Select a Presentation Exchange ID" style={{}}>
                           <Form.Select aria-label='mecojoni' id="selectPresEx" size="lg" onChange={this.handlePresExIdChange} style={{}} >
                             <option value="" hidden></option>
-                            {this.state.credPresExId !== null ? this.state.credPresExId.length > 1 ? this.state.credPresExId.filter(cred => cred.state === "request_received").map((entry) =>
+                            {this.state.credPresExId !== null ? this.state.credPresExId.length >=1 ? this.state.credPresExId.filter(cred => cred.state === "request_received").map((entry) =>
                               <option key={entry.presentation_exchange_id} value={entry.presentation_exchange_id}>
-                                {entry.presentation_exchange_id}</option>) : <option value={this.state.credPresExId[0] !== undefined ? this.state.credPresExId[0].presentation_exchange_id : " "}>
-                              {this.state.credPresExId[0] !== undefined ? this.state.credPresExId[0].presentation_exchange_id : " "}</option> : <option value=' '>nada </option>}
+                                {entry.presentation_exchange_id}</option>) : <option value={this.state.credPresExId.length >=1 ? this.state.credPresExId[0].presentation_exchange_id : " "}>
+                              {this.state.credPresExId.length >=1 ? this.state.credPresExId[0].presentation_exchange_id : " "}</option> : <option value=' '>nada </option>}
                           </Form.Select>
                         </FloatingLabel>
                       </div>
@@ -437,7 +444,7 @@ class SSIPage extends React.Component {
                         <FloatingLabel controlId="floatingSelect" label="Select a valid Credential" style={{}}>
                           <Form.Select aria-label='mecojoni' id="selectValidCred" size="lg" onChange={this.handleValidCred} style={{}} >
                             <option value="" hidden></option>
-                            {this.state.validCred != null ? this.state.validCred.length > 1 ? this.state.validCred.map((entry) =>
+                            {this.state.validCred != null ? this.state.validCred.length >=1 ? this.state.validCred.map((entry) =>
                               <option key={entry.cred_info.referent} value={entry.cred_info.referent}>
                                 {entry.cred_info.referent}</option>) : <option value={this.state.validCred != null ? this.state.validCred[0].cred_info.referent : " "}>
                               {this.state.validCred != null ? this.state.validCred[0].cred_info.referent : " "}</option> : <option value=' '>nada </option>}

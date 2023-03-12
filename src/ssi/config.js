@@ -1,11 +1,3 @@
-export const _agents = {
-    seller: { agentPort: 8041, intPort: 3001},
-    registry: { agentPort: 8051, intPort: 3002 },
-    broker: { agentPort: 8061, intPort: 3003 },
-    buyer: { agentPort: 8071, intPort: 3004 },
-    sellersbank: { agentPort: 8081, intPort: 3005 },
-    buyersbank: { agentPort: 8091, intPort: 3006 }
-};
 
 export const _ownershipSchema = {
 
@@ -240,4 +232,13 @@ export const _proofPresentation = {
 
     },
     "trace": true
+};
+
+export const _agents = {
+    seller: { agentPort: 8041},
+    registry: { agentPort: 8051, schema: _ownershipSchema },
+    broker: { agentPort: 8061, schema: _offerPropertySchema, },
+    buyer: { agentPort: 8071},
+    sellersbank: { agentPort: 8081, schema: _mortgageSchema, },
+    buyersbank: { agentPort: 8091}
 };

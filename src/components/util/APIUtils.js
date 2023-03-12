@@ -1,4 +1,3 @@
-import { _url } from "../config";
 import { _agents, _proofPresentation } from "../../ssi/config";
 
 const request = (options) => {

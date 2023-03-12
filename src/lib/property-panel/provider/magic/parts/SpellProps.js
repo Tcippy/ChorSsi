@@ -44,51 +44,22 @@ function html(name, messageName, id) {
 
 };
 
-function allPossibleCombinations(list, maxLen) {
-  // Copy initial values as arrays
-  var perm = list.map(function(val) {
-      return [val];
-  });
-  // Our permutation generator
-  var generate = function(perm, maxLen, currLen) {
-      // Reached desired length
-      if (currLen === maxLen) {
-          return perm;
-      }
-      // For each existing permutation
-      for (var i = 0, len = perm.length; i < len; i++) {
-          var currPerm = perm.shift();
-          // Create new permutation
-          for (var k = 0; k < list.length; k++) {
-              perm.push(currPerm.concat(list[k]));
-          }
-      }
-      // Recurse
-      return generate(perm, maxLen, currLen + 1);
-  };
-  // Start with size 1 because of initial values
-  return generate(perm, maxLen, 1);
-
-
-}
 
 function callBack(name) {
   try {
     var arr = Object.entries(_agents).map(item => item[1].agentPort);
 
-    const output = [];
-    
     for (let i = 0; i < arr.length - 1; i++) {
       for (let j = i + 1; j < arr.length; j++) {
-       // output.push(`${arr[i]} - ${arr[j]}`);
+        // output.push(`${arr[i]} - ${arr[j]}`);
         connectAgents(arr[i])[0].then(res => {
           receiveInvitation(res, arr[j])
-          console.log("invitator:"+arr[i]+"receiver:"+arr[j])
+          console.log("invitator:" + arr[i] + "receiver:" + arr[j])
         })
       }
     }
-    
-   // console.log("output",output);
+
+    // console.log("output",output);
     //createSchema(_agents.registry.agentPort,_ownershipSchema);
     /* Object.entries(_agents).forEach(entry => {
       var port = entry[1].agentPort;
@@ -111,31 +82,14 @@ function createDef(port, schema) {
   });
 }
 
-function createSchema() {/* 
-  console.log("createSchema", schema);
-  createSchemaAPI(port, schema).then(res => {
-    console.log("schemaa", res)
-    createDef(_agents.registry.agentPort, res.schema_id)
-  });
- */
-  createSchemaAPI(_agents.broker.agentPort, _ownershipSchema).then(res => {
-    console.log("schemaa", createCredDefAPI(_agents.registry.agentPort, res.schema_id))
-
-
-
-  });
-
-  createSchemaAPI(_agents.broker.agentPort, _offerPropertySchema).then(res => {
-    console.log("schemaa", createCredDefAPI(_agents.broker.agentPort, res.schema_id))
-
-  }
-  );
-
-
-  createSchemaAPI(_agents.sellersbank.agentPort, _mortgageSchema).then(res => {
-    console.log("schemaa", createCredDefAPI(_agents.sellersbank.agentPort, res.schema_id)
-    )
-
+function createSchema() {
+  var arr = Object.entries(_agents).map(item => item[1]);
+  arr.forEach(entry =>{
+    if(entry.schema != undefined){
+      createSchemaAPI(entry.agentPort, entry.schema).then(res => {
+        createCredDefAPI(entry.agentPort, res.schema_id).then( cred => console.log("credential",cred));
+      });
+    }
   }
   );
 
@@ -143,15 +97,16 @@ function createSchema() {/*
 
 function connectParticipants() {
 
-  return domify('<div class="bpp-field-wrapper"' +
-    '<div class="bpp-properties-entry" ' + 'data-show="show"' + '>' +
-    '<label for="tortellini">' + "Click to initialize the system" + '</label>' +
-    '<button type="button"  class="btn btn-outline-primary" data-action="connectElement" ><span>Connect Participants</span></button>' +
+  return domify('<div class="bpp-field-wrapper" style="flex-direction:column;">' +
+    '<div class="bpp-properties-entry" ' + 'data-show="show"' + ' >' +
+    '<label for="tortellini">' + "Click to connect all the involved participants" + '</label>' +
     '</div>' +
+    '<button type="button"  class="btn btn-outline-primary" data-action="connectElement" ><span>Connect </span></button>' +
+    '<p>'+ "" +'</p>'+
     '<div class="bpp-properties-entry" ' + 'data-show="show"' + '>' +
-    '<label for="tortellini">' + "Click to initialize the system" + '</label>' +
+    '<label for="tortellini">' + "Click to create the needed credential definitions" + '</label>' +
+    '</div>' +
     '<button type="button"  class="btn btn-outline-primary" data-action="createCredDef" ><span>Create Credentials</span></button>' +
-    '</div>' +
     "</div>");
 }
 

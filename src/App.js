@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import Menu from "./components/menu/Menu";
 import BpmnModeler from './components/bpmn/BpmnModeler';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { _url, _urlNuovo } from "./components/config";
 import SSIPage from "./components/SSIPage/SSIPage";
 
 function App() {

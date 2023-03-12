@@ -6,13 +6,14 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import CancelIcon from '@mui/icons-material/Cancel';
 import { grey } from '@mui/material/colors';
+import { _agents } from '../../ssi/config';
 
 function StatusBar() {
 
   var active = localStorage.getItem("status").split(", ");
-  var allPart = localStorage.getItem("participant").split(", ");
+  var allPart = Object.keys(_agents);
   //console.log("name :", name) : console.log("name :", 0) )
-
+  console.log("allPart",allPart);
   const [value, setValue] = React.useState('one');
 
   const handleChange = (event, newValue) => {
@@ -32,24 +33,19 @@ function StatusBar() {
         //indicatorColor='secondary'
         centered
       >
-        {allPart.map((name) =>( active.includes(name) ?(
+        {allPart.map((name) =>( 
           <Tab 
             //sx={{'& .MuiButtonBase-root':{backgroundColor:'black'}}}
             icon={<VerifiedIcon style={{ color: "green" }} />}
             iconPosition="bottom"
-            value={allPart.indexOf(name)=== 0 ? "one"  : allPart.indexOf(name)}
-            key={allPart.indexOf(name)}
+            value={allPart.indexOf(name) === 0 ? "one" : allPart.indexOf(name)}
+            key={name}
+            onClick={localStorage.setItem("profilePort",_agents[name].agentPort) }
             label={name}
             wrapped
           />
-        ):<Tab
-        icon={<CancelIcon style={{ color: "black" }} />}
-        iconPosition="bottom"
-        value={allPart.indexOf(name)=== 0 ? "one" : allPart.indexOf(name)}
-        key={allPart.indexOf(name)}
-        label={name}
-        wrapped
-      />))}
+          
+        ))}
       </Tabs>
     </Box>  
     )

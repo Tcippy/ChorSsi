@@ -9,12 +9,13 @@ import {
 } from '../../data';
 import AgentService from '../../ssi/AgentService';
 import $, { get } from 'jquery';
-import { _url, _urlNuovo, _urlResources } from "../config";
-import StatusBar from '../statusBar/StatusBar'
+import StatusBar from '../statusBar/StatusBar';
+import { getCredDefIdAPI } from "../../components/util/APIUtils";
+
 
 const Profile = (props) => {
 
-    const [files, setFiles] = useState([]);
+    const [credDef, setCredDef] = useState([]);
     const [status, setStatus] = useState([]);
 
     const [name, setName] = useState("");
@@ -52,8 +53,8 @@ const Profile = (props) => {
     useEffect(() => {
         //getData();
         
-        // getModels()
-        getAllModels();
+         getCredDef();
+        //getAllModels();
     }, [])
 
 
@@ -93,142 +94,23 @@ const Profile = (props) => {
             }) 
     }
 
-    function getModels(id) {
-        id
-            ? $.ajax({
-                method: "GET",
-                url: _url + "/getMyFiles",
-                data: { id: id, },
-                success: function (data) {
-                    setModels(data)
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log("funzione chiamata quando la chiamata fallisce", jqXHR, textStatus, errorThrown);
-                }
-            })
-            : console.log('nessun id')
-    }
-    function getSvg(id) {
-        id
-            ? $.ajax({
-                method: "GET",
-                url: _url + "/getMySvg",
-                data: { id: id, },
-                success: function (data) {
-                    setSvg(data)
-                    console.log("chiamata data",data)
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.log("funzione chiamata quando la chiamata fallisce", jqXHR, textStatus, errorThrown);
-                }
-            })
-            : console.log('nessun id')
+    function getCredDef(){
+        getCredDefIdAPI(localStorage.getItem("profilePort")).then(
+
+        )
     }
 
-    const onInputChange = (e) => {
-        setFiles(e.target.files)
-    };
-
-    const onSubmit = (e) => {
-        e.preventDefault();
-
-        const data = new FormData();
-        console.log('files0', files[0]);
-        //const imgBlob = new Blob([files[0]], { type: 'xml' });
-        //for (let i = 0; i < files.length; i++) {
-        data.append('upload', files[0],
-            "static/" + id + "/" + files[0].name + ".bpmn");
-        //data.append('svg', files[1]);
-
-        //}
-        //data.append("id", id);
-        data.append("tenant-id", id);
-
-        console.log(data, "data");
-
-        $.ajax({
-            method: 'POST',
-            url: _urlNuovo + "/engine-rest/deployment/create",
-            data: data,
-            processData: false,
-            contentType: false
-        }).done(function (result) {
-            // do something with the result now
-
-            console.log(result);
-        }).fail(function (a, b, c) {
-            alert("error");
-        });
-    };
-
-    function elimina(d) {
-        $.ajax({
-            method: "GET",
-            url: _url + "/deleteDiagram",
-            data: {
-                path: d,
-                user: id
-            },
-            success: function (data) {
-                window.location.reload()
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log("funzione chiamata quando la chiamata fallisce", jqXHR, textStatus, errorThrown);
-            }
-        })
-    }
-
-    function getAllModels() {
-        
-        $.ajax({
-            method: "GET",
-            url: _urlNuovo + "/engine-rest/process-definition",
-            success: function (data) {
-                setProcess(data);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log("funzione chiamata quando la chiamata fallisce", jqXHR, textStatus, errorThrown);
-            }
-        })
-
-    }
-
-    function eliminaDaNome(models, name) {
-        //console.log("MODELSS", models);
-        //console.log("NAME",name);
-        name = "static/" + id + "/" + name;
-        models.map((d) => {
-            if (name === d.resource) {
-                $.ajax({
-                    method: "DELETE",
-                    url: _urlNuovo + "/engine-rest/process-definition/" + d.id,
-                    success: function (data) {
-                        console.log("data", data);
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.log("funzione chiamata quando la chiamata fallisce", jqXHR, textStatus, errorThrown);
-                    }
-                })
-                $.ajax({
-                    method: "DELETE",
-                    url: _urlNuovo + "/engine-rest/deployment/" + d.deploymentId + "?cascade=true",
-                    success: function (data) {
-                        console.log("data", data);
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        console.log("funzione chiamata quando la chiamata fallisce", jqXHR, textStatus, errorThrown);
-                    }
-                })
-            }
-        }
-        );
-    }
+  
+    
 
     return (
+        
         <div className="profile" id="profile">
             <h1>Agents </h1>
             <StatusBar />
-        
+            {console.log("localst",localStorage.getItem("profilePort"))}
+
+        {console.log("credDef",credDef)}
          
 
         </div>

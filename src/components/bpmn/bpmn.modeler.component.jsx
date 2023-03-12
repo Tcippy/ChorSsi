@@ -13,12 +13,10 @@ import "./bpmn.scss";
 import CustomRendererModule from '../renderer/CustomRenderer';
 import ColoredRendererModule from '../../lib/color-picker';
 import $ from 'jquery';
-import { _url, _urlNuovo } from '../config';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { saveAs } from "file-saver";
 import ChoreoModeler from 'chor-js/lib/Modeler';
 import Reporter from '../../lib/validator/Validator';
-import Profile from '../profile/Profile'
 import { response } from '../../ssi/AgentService';
 //import esm from 'esm';
 import magicPropertiesProviderModule from '../../lib/property-panel/provider/magic';
@@ -274,7 +272,7 @@ class BpmnModelerComponent extends React.Component {
         <div id="bpmnview" style={{ width: '75%', height: '100%', float: 'left' }}></div>
         <div className="modelerBPMN">
           {/*          <Link to="/profile" className='link' style={{  textDecoration: 'none' }}>
-          */}        <button className="downloadButton" onClick={() => { localStorage.setItem("toColour", " ") }} >Reset Colours </button>
+          */}        {/* <button className="downloadButton" onClick={() => { localStorage.setItem("toColour", " ") }} >Reset Colours </button> */}
           {/* <button className="downloadButton1" onClick={() => this.state.setPageOpen(this.isTrueSet)} >Status </button> */}
         </div>
 

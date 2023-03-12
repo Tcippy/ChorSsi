@@ -7,7 +7,6 @@ export const emptyBpmn = `<?xml version="1.0" encoding="UTF-8"?>
   <bpmn2:message id="Message_18caf6k" name="Offer Credential" />
   <bpmn2:message id="Message_0xssa5b" name="Present Proof" />
   <bpmn2:message id="Message_1jnb8hb" name="Accept Mortgage Deeds" />
-  <bpmn2:message id="Message_04hr8a2" />
   <bpmn2:message id="Message_1siw4g6" name="Accept Offer" />
   <bpmn2:message id="Message_0vby74q" name="Present Proof" />
   <bpmn2:message id="Message_0epe6o2" name="Accept Credential" />
@@ -28,7 +27,6 @@ export const emptyBpmn = `<?xml version="1.0" encoding="UTF-8"?>
     <bpmn2:messageFlow id="MessageFlow_1vms9k1" sourceRef="Participant_0vb4wl7" targetRef="Participant_031en92" messageRef="Message_18caf6k" />
     <bpmn2:messageFlow id="MessageFlow_0imneaq" sourceRef="Participant_0hk3i22" targetRef="Participant_0vb4wl7" messageRef="Message_0xssa5b" />
     <bpmn2:messageFlow id="MessageFlow_144053w" sourceRef="Participant_0hk3i22" targetRef="Participant_0fl0qh5" messageRef="Message_1jnb8hb" />
-    <bpmn2:messageFlow id="MessageFlow_046t82q" sourceRef="Participant_031en92" targetRef="Participant_0fl0qh5" messageRef="Message_04hr8a2" />
     <bpmn2:messageFlow id="MessageFlow_1k1ilv5" sourceRef="Participant_1ypyzs0" targetRef="Participant_1u1zdeg" messageRef="Message_1siw4g6" />
     <bpmn2:messageFlow id="MessageFlow_093bk1t" sourceRef="Participant_031en92" targetRef="Participant_1u1zdeg" messageRef="Message_0vby74q" />
     <bpmn2:messageFlow id="MessageFlow_08kegbc" sourceRef="Participant_031en92" targetRef="Participant_0vb4wl7" messageRef="Message_0epe6o2" />
@@ -41,13 +39,9 @@ export const emptyBpmn = `<?xml version="1.0" encoding="UTF-8"?>
     </bpmn2:textAnnotation>
     <bpmn2:association id="Association_1px8hv4" sourceRef="ChoreographyTask_08zltwe" targetRef="TextAnnotation_0nai09z" />
     <bpmn2:textAnnotation id="TextAnnotation_0f1d01n">
-      <bpmn2:text>The Broker offer a credential for a price that the pontetial Buyer will have to pay</bpmn2:text>
+      <bpmn2:text>The Broker offers a credential for a price that the potential Buyer will have to pay</bpmn2:text>
     </bpmn2:textAnnotation>
     <bpmn2:association id="Association_1fm4bwe" sourceRef="ChoreographyTask_19pqmow" targetRef="TextAnnotation_0f1d01n" />
-    <bpmn2:textAnnotation id="TextAnnotation_0cv8gzz">
-      <bpmn2:text>The Seller invites its Bank into the workflow requesting to add mortgage deeds for selling its porpery</bpmn2:text>
-    </bpmn2:textAnnotation>
-    <bpmn2:association id="Association_05my1d6" sourceRef="ChoreographyTask_0yuyl8m" targetRef="TextAnnotation_0cv8gzz" />
     <bpmn2:textAnnotation id="TextAnnotation_0ct19oz">
       <bpmn2:text>The Seller's Bank exchanges the mortgage deeds for cash with the Buyer's bank</bpmn2:text>
     </bpmn2:textAnnotation>
@@ -79,7 +73,7 @@ export const emptyBpmn = `<?xml version="1.0" encoding="UTF-8"?>
     <bpmn2:sequenceFlow id="Flow_0j5jqry" sourceRef="ChoreographyTask_0axlrdi" targetRef="ChoreographyTask_08zltwe" />
     <bpmn2:choreographyTask id="ChoreographyTask_19pqmow" name="Purchase Request" initiatingParticipantRef="Participant_1ypyzs0">
       <bpmn2:incoming>Flow_1j6gfb7</bpmn2:incoming>
-      <bpmn2:outgoing>Flow_170sz1d</bpmn2:outgoing>
+      <bpmn2:outgoing>Flow_0cb4mlg</bpmn2:outgoing>
       <bpmn2:participantRef>Participant_1u1zdeg</bpmn2:participantRef>
       <bpmn2:participantRef>Participant_1ypyzs0</bpmn2:participantRef>
       <bpmn2:messageFlowRef>MessageFlow_1e3c18r</bpmn2:messageFlowRef>
@@ -87,7 +81,7 @@ export const emptyBpmn = `<?xml version="1.0" encoding="UTF-8"?>
     </bpmn2:choreographyTask>
     <bpmn2:sequenceFlow id="Flow_1j6gfb7" sourceRef="ChoreographyTask_08zltwe" targetRef="ChoreographyTask_19pqmow" />
     <bpmn2:choreographyTask id="ChoreographyTask_11sd49k" name="Finalize the sale" initiatingParticipantRef="Participant_0hk3i22">
-      <bpmn2:incoming>Flow_0plizp7</bpmn2:incoming>
+      <bpmn2:incoming>Flow_0cb4mlg</bpmn2:incoming>
       <bpmn2:outgoing>Flow_19kg60n</bpmn2:outgoing>
       <bpmn2:participantRef>Participant_0fl0qh5</bpmn2:participantRef>
       <bpmn2:participantRef>Participant_0hk3i22</bpmn2:participantRef>
@@ -107,15 +101,7 @@ export const emptyBpmn = `<?xml version="1.0" encoding="UTF-8"?>
       <bpmn2:incoming>Flow_1ru34ta</bpmn2:incoming>
     </bpmn2:endEvent>
     <bpmn2:sequenceFlow id="Flow_1ru34ta" sourceRef="ChoreographyTask_1tjiga2" targetRef="Event_1wz8kvv" />
-    <bpmn2:choreographyTask id="ChoreographyTask_0yuyl8m" name="Add mortgage deeds" initiatingParticipantRef="Participant_031en92">
-      <bpmn2:incoming>Flow_170sz1d</bpmn2:incoming>
-      <bpmn2:outgoing>Flow_0plizp7</bpmn2:outgoing>
-      <bpmn2:participantRef>Participant_031en92</bpmn2:participantRef>
-      <bpmn2:participantRef>Participant_0fl0qh5</bpmn2:participantRef>
-      <bpmn2:messageFlowRef>MessageFlow_046t82q</bpmn2:messageFlowRef>
-    </bpmn2:choreographyTask>
-    <bpmn2:sequenceFlow id="Flow_0plizp7" sourceRef="ChoreographyTask_0yuyl8m" targetRef="ChoreographyTask_11sd49k" />
-    <bpmn2:sequenceFlow id="Flow_170sz1d" sourceRef="ChoreographyTask_19pqmow" targetRef="ChoreographyTask_0yuyl8m" />
+    <bpmn2:sequenceFlow id="Flow_0cb4mlg" sourceRef="ChoreographyTask_19pqmow" targetRef="ChoreographyTask_11sd49k" />
   </bpmn2:choreography>
   <bpmndi:BPMNDiagram id="BPMNDiagram_141updn">
     <bpmndi:BPMNPlane id="BPMNPlane_0xkw46k" bpmnElement="Choreography_1wp1o08">
@@ -162,50 +148,37 @@ export const emptyBpmn = `<?xml version="1.0" encoding="UTF-8"?>
         <di:waypoint x="669" y="310" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="ChoreographyTask_11sd49k_di" bpmnElement="ChoreographyTask_11sd49k">
-        <dc:Bounds x="990" y="270" width="100" height="80" />
+        <dc:Bounds x="827" y="270" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_03c8r7a" bpmnElement="Participant_0hk3i22" isMessageVisible="true" participantBandKind="bottom_initiating" choreographyActivityShape="ChoreographyTask_11sd49k_di">
-        <dc:Bounds x="990" y="330" width="100" height="20" />
+        <dc:Bounds x="827" y="330" width="100" height="20" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_0mt12dl" bpmnElement="Participant_0fl0qh5" isHorizontal="true" isMessageVisible="true" participantBandKind="top_non_initiating" choreographyActivityShape="ChoreographyTask_11sd49k_di">
-        <dc:Bounds x="990" y="270" width="100" height="20" />
+        <dc:Bounds x="827" y="270" width="100" height="20" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ChoreographyTask_1tjiga2_di" bpmnElement="ChoreographyTask_1tjiga2">
-        <dc:Bounds x="1150" y="270" width="100" height="80" />
+        <dc:Bounds x="987" y="270" width="100" height="80" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_0hz78qw" bpmnElement="Participant_0hk3i22" isMessageVisible="true" participantBandKind="bottom_initiating" choreographyActivityShape="ChoreographyTask_1tjiga2_di">
-        <dc:Bounds x="1150" y="330" width="100" height="20" />
+        <dc:Bounds x="987" y="330" width="100" height="20" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="BPMNShape_1y7olht" bpmnElement="Participant_0vb4wl7" isMessageVisible="true" participantBandKind="top_non_initiating" choreographyActivityShape="ChoreographyTask_1tjiga2_di">
-        <dc:Bounds x="1150" y="270" width="100" height="20" />
+        <dc:Bounds x="987" y="270" width="100" height="20" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_19kg60n_di" bpmnElement="Flow_19kg60n">
-        <di:waypoint x="1091" y="310" />
-        <di:waypoint x="1149" y="310" />
+        <di:waypoint x="928" y="310" />
+        <di:waypoint x="986" y="310" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="Event_1wz8kvv_di" bpmnElement="Event_1wz8kvv">
-        <dc:Bounds x="1312" y="292" width="36" height="36" />
+        <dc:Bounds x="1149" y="292" width="36" height="36" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_1ru34ta_di" bpmnElement="Flow_1ru34ta">
-        <di:waypoint x="1251" y="310" />
-        <di:waypoint x="1312" y="310" />
+        <di:waypoint x="1088" y="310" />
+        <di:waypoint x="1149" y="310" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="ChoreographyTask_0yuyl8m_di" bpmnElement="ChoreographyTask_0yuyl8m">
-        <dc:Bounds x="830" y="270" width="100" height="80" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_1lbwhsz" bpmnElement="Participant_031en92" isMessageVisible="true" participantBandKind="top_initiating" choreographyActivityShape="ChoreographyTask_0yuyl8m_di">
-        <dc:Bounds x="830" y="270" width="100" height="20" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="BPMNShape_0qcqva2" bpmnElement="Participant_0fl0qh5" isHorizontal="true" isMessageVisible="true" participantBandKind="bottom_non_initiating" choreographyActivityShape="ChoreographyTask_0yuyl8m_di">
-        <dc:Bounds x="830" y="330" width="100" height="20" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Flow_0plizp7_di" bpmnElement="Flow_0plizp7">
-        <di:waypoint x="931" y="310" />
-        <di:waypoint x="989" y="310" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_170sz1d_di" bpmnElement="Flow_170sz1d">
+      <bpmndi:BPMNEdge id="Flow_0cb4mlg_di" bpmnElement="Flow_0cb4mlg">
         <di:waypoint x="771" y="310" />
-        <di:waypoint x="829" y="310" />
+        <di:waypoint x="826" y="310" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="TextAnnotation_0cmzo3b_di" bpmnElement="TextAnnotation_0cmzo3b">
         <dc:Bounds x="250" y="120" width="100" height="70" />
@@ -222,36 +195,30 @@ export const emptyBpmn = `<?xml version="1.0" encoding="UTF-8"?>
         <di:waypoint x="498" y="190" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="TextAnnotation_0f1d01n_di" bpmnElement="TextAnnotation_0f1d01n">
-        <dc:Bounds x="590" y="121" width="140" height="67" />
+        <dc:Bounds x="590" y="121" width="140" height="70" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_1fm4bwe_di" bpmnElement="Association_1fm4bwe">
         <di:waypoint x="701" y="269" />
-        <di:waypoint x="664" y="188" />
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="TextAnnotation_0cv8gzz_di" bpmnElement="TextAnnotation_0cv8gzz">
-        <dc:Bounds x="760" y="120" width="170" height="68" />
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="Association_05my1d6_di" bpmnElement="Association_05my1d6">
-        <di:waypoint x="860" y="269" />
-        <di:waypoint x="820" y="190" />
+        <di:waypoint x="665" y="191" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="TextAnnotation_0ct19oz_di" bpmnElement="TextAnnotation_0ct19oz">
-        <dc:Bounds x="950" y="120" width="150" height="70" />
+        <dc:Bounds x="787" y="120" width="150" height="70" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_1caacuo_di" bpmnElement="Association_1caacuo">
-        <di:waypoint x="1020" y="269" />
-        <di:waypoint x="980" y="190" />
+        <di:waypoint x="857" y="269" />
+        <di:waypoint x="817" y="190" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="TextAnnotation_1fgpm36_di" bpmnElement="TextAnnotation_1fgpm36">
-        <dc:Bounds x="1100" y="121" width="170" height="68" />
+        <dc:Bounds x="937" y="121" width="170" height="68" />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Association_0xzn61a_di" bpmnElement="Association_0xzn61a">
-        <di:waypoint x="1180" y="269" />
-        <di:waypoint x="1140" y="189" />
+        <di:waypoint x="1017" y="269" />
+        <di:waypoint x="977" y="189" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </bpmn2:definitions>
+
 
 
 `;
