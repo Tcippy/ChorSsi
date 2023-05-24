@@ -47,6 +47,14 @@ export function getConnections(port) {
 }
 
 
+export function getIssuedCredentialAPI(port) {
+    return request({
+        url: "http://localhost:" + port + "/issue-credential/records",
+        method: 'GET',
+
+    })
+}
+
 export function getCredentialWalletAPI(port) {
     return request({
         url: "http://localhost:" + port + "/credentials",
@@ -55,6 +63,29 @@ export function getCredentialWalletAPI(port) {
     })
 }
 
+export function getPresentationsAPI(port) {
+    return request({
+        url: "http://localhost:" + port + "/present-proof/records",
+        method: 'GET',
+
+    })
+}
+
+export function getSchemaIdAPI(port) {
+    return request({
+        url: "http://localhost:" + port + "/schemas/created",
+        method: 'GET',
+
+    })
+}
+
+export function getSchemaDetailsAPI(port, credId) {
+    return request({
+        url: "http://localhost:" + port + "/schemas/" + credId,
+        method: 'GET',
+
+    })
+}
 
 export function getCredDefIdAPI(port) {
     return request({
@@ -115,11 +146,11 @@ export function receiveInvitation(invitation, receiver) {
 
 /*      if (entry[0] !== invitation.invitation.label) {
  */        return request({
-            url: "http://localhost:" + receiver + "/connections/receive-invitation?auto_accept=true&multi_use=true",
-            method: 'POST',
-            body: JSON.stringify(invitation.invitation)
-        });
-   // } 
+        url: "http://localhost:" + receiver + "/connections/receive-invitation?auto_accept=true&multi_use=true",
+        method: 'POST',
+        body: JSON.stringify(invitation.invitation)
+    });
+    // } 
 }
 
 
@@ -180,7 +211,6 @@ export function acceptOfferAPI(port, credDefExId) {
     })
 }
 
-
 export function createCredDefAPI(port, schemaId) {
     var credDefId = {
         "revocation_registry_size": 1000,
@@ -196,3 +226,26 @@ export function createCredDefAPI(port, schemaId) {
     })
 }
 
+export function revokeCredAPI(port, cred, conn) {
+    var body = {
+        "comment": "string",
+        "connection_id": conn,
+        "cred_ex_id": cred,
+        "notify": true,
+        "publish": true,
+        "thread_id": "string"
+    }
+    return request({
+        url: "http://localhost:" + port + "/revocation/revoke",
+        method: 'POST',
+        body: JSON.stringify(body)
+    })
+}
+
+export function checkRevocationAPI(port, credId) {
+    return request({
+        url: "http://localhost:" + port + "/credential/revoked/" + credId,
+        method: 'GET',
+
+    })
+}

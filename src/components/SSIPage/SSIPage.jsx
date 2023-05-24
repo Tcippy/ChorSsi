@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import "./SSIPage.css";
 import $ from "jquery";
-import Popper from "popper.js";
+//import Popper from "popper.js";
 import 'bootstrap/dist/js/bootstrap.bundle'
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { _agents, _registryOffer, _proofRequest, _offerPropertySchema, _propertyOffer, _ownershipSchema, _mortgageSchema, _mortgageOffer, _mortgageRequest } from '../../ssi/config';
@@ -265,7 +264,7 @@ class SSIPage extends React.Component {
 
                       <MDBCol md='6' className='bg-indigo p-5' style={{ width: '100%', height: '100%', }}>
 
-                        <h3 className="fw-normal mb-5 text-white" style={{ color: '#4835d4', width: '100%' }}>
+                        <h3 className="fw-normal mb-5 text-body" style={{ color: '#4835d4', width: '100%' }}>
                           {localStorage.getItem("pageOpen").toUpperCase() + ": " + localStorage.getItem("request").split("+")[0]}</h3>
                         <div>
                           <FloatingLabel controlId="floatingSelect" label="Select a Connection ID" style={{}}>
@@ -329,7 +328,7 @@ class SSIPage extends React.Component {
 
                       <MDBCol md='6' className='bg-indigo p-5' style={{ width: '100%', height: '100%', }}>
 
-                        <h3 className="fw-normal mb-5 text-white" style={{ color: '#4835d4', width: '100%' }}>
+                        <h3 className="fw-normal mb-5 text-body" style={{ color: '#4835d4', width: '100%' }}>
                           {localStorage.getItem("pageOpen").toUpperCase() + ": " + localStorage.getItem("request").split("+")[0]}</h3>
 
 
@@ -376,7 +375,7 @@ class SSIPage extends React.Component {
 
                     <MDBCol md='6' className='bg-indigo p-5' style={{ width: '100%', height: '100%', }}>
 
-                      <h3 className="fw-normal mb-5 text-white" style={{ color: '#4835d4', width: '100%' }}>
+                      <h3 className="fw-normal mb-5 text-body" style={{ color: '#4835d4', width: '100%' }}>
                         {localStorage.getItem("pageOpen").toUpperCase() + ": " + localStorage.getItem("request").split("+")[0]}</h3>
 
 
@@ -391,7 +390,7 @@ class SSIPage extends React.Component {
                         </FloatingLabel>
                       </div>
                       <div style={{ width: '100%' }}>
-                        <MDBTextArea label='Request proof' size='lg' defaultValue={JSON.stringify(localStorage.getItem("request").split("+")[1] === "broker" ? _proofRequest : _mortgageRequest, null, 4)} id='textAreaCredDefEx' style={{ backgroundColor: 'white', marginTop: '5px', width: '100%' }} rows={18} />
+                        <MDBTextArea label='Request proof' size='lg' defaultValue={JSON.stringify(localStorage.getItem("pageOpen").toLowerCase() === "broker" ? _proofRequest : _mortgageRequest, null, 4)} id='textAreaCredDefEx' style={{ backgroundColor: 'white', marginTop: '5px', width: '100%' }} rows={18} />
                       </div>
                       <div style={{ marginTop: "40px" }}>
                         <MDBBtn color='light' size='lg' onClick={this.sendProofRequest}>Request</MDBBtn>

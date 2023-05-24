@@ -262,7 +262,7 @@ class BpmnModelerComponent extends React.Component {
   }
 
   render = () => {
-  
+
     return (
 
       <div id="bpmncontainer" style={{ width: '100%', height: '100%' }} >
@@ -272,7 +272,8 @@ class BpmnModelerComponent extends React.Component {
         <div id="bpmnview" style={{ width: '75%', height: '100%', float: 'left' }}></div>
         <div className="modelerBPMN">
           {/*          <Link to="/profile" className='link' style={{  textDecoration: 'none' }}>
-          */}        {/* <button className="downloadButton" onClick={() => { localStorage.setItem("toColour", " ") }} >Reset Colours </button> */}
+          */}        {/* <button className="downloadButton" onClick={() => { localStorage.setItem("toColour", " ") }} >Reset Colours
+          </button> 
           {/* <button className="downloadButton1" onClick={() => this.state.setPageOpen(this.isTrueSet)} >Status </button> */}
         </div>
 

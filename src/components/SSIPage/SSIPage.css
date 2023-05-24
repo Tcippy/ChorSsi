@@ -10,7 +10,9 @@ body {
   }
   
   .bg-indigo {
-    background-color: #e4443f;
+    /*background-color: rgb(74, 155, 65);*/
+    background-color: rgb(185, 250, 185);
+
   }
   
   @media (min-width: 1025px) {

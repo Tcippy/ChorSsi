@@ -14,29 +14,35 @@ function StatusBar({ onValue }) {
   var active = localStorage.getItem("status").split(", ");
   var allPart = Object.keys(_agents);
   //console.log("name :", name) : console.log("name :", 0) )
-  console.log("allPart",allPart);
+  console.log("allPart", allPart);
   const [value, setValue] = React.useState('one');
 
   const handleChange = (event, newValue) => {
-    setValue(newValue);
-    onValue(newValue)
+    if (newValue === "one")
+      window.location.reload(false);
+    onValue(newValue);
+    setValue(newValue)
   };
 
   return (
-    <Box sx={{width:'100%', border:2,borderColor:'crimson', display: 'flex',backgroundColor:'rgb(244, 46, 85)',
-            justifyContent:'center'}}>
+    <Box sx={{
+      width: '100%', border: 2, borderColor: 'rgb(185, 250, 185)', display: 'flex', /* backgroundColor: 'rgb(244, 46, 85)' */backgroundColor: 'rgb(185, 250, 185)',
+      justifyContent: 'center'
+    }}>
       <Tabs
-      sx={{'& .MuiTabs-indicator':{backgroundColor:'rgb(255, 188, 201)'},'& .MuiButtonBase-root':{  borderColor:'crimson'},
-      '& .MuiButtonBase-root.Mui-selected':{ backgroundColor:'rgb(255, 188, 201)'},'& .MuiButtonBase-root.MuiTab-textColorPrimary':{  color:'white', fontWeight: 'bold'}
-      ,'& .MuiButtonBase-root.MuiTab-textColorPrimary.Mui-selected':{  color:'black', fontWeight: 'bold',} }}
+        sx={{
+          '& .MuiTabs-indicator': { backgroundColor: 'rgb(240, 249, 237)' }, '& .MuiButtonBase-root': { borderColor: 'green' },
+          '& .MuiButtonBase-root.Mui-selected': { backgroundColor: 'rgb(240, 249, 237)' }, '& .MuiButtonBase-root.MuiTab-textColorPrimary': { color: 'black', fontWeight: 'bold' }
+          , '& .MuiButtonBase-root.MuiTab-textColorPrimary.Mui-selected': { color: 'black', fontWeight: 'bold', }
+        }}
         value={value}
         onChange={handleChange}
         aria-label="wrapped label tabs example"
         //indicatorColor='secondary'
         centered
       >
-        {allPart.map((name) =>( 
-          <Tab 
+        {allPart.map((name) => (
+          <Tab
             //sx={{'& .MuiButtonBase-root':{backgroundColor:'black'}}}
             icon={<VerifiedIcon style={{ color: "green" }} />}
             iconPosition="bottom"
@@ -46,11 +52,11 @@ function StatusBar({ onValue }) {
             label={name}
             wrapped
           />
-          
+
         ))}
       </Tabs>
-    </Box>  
-    )
+    </Box>
+  )
 }
 
 export default StatusBar;

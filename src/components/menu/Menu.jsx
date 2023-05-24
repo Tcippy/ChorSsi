@@ -10,11 +10,8 @@ function Menu({ menuOpen, setMenuOpen }) {
                 <Link to="/" style={{ color: '#fff', textDecoration: 'none' }}>
                     <li onClick={() => setMenuOpen(false)}>Modeler</li>
                 </Link>
-                <Link to="/ledger" style={{ color: '#fff', textDecoration: 'none' }}>
-                    <li onClick={() => setMenuOpen(false)}>Ledger</li>
-                </Link>
-                <Link to="/wallet" style={{ color: '#fff', textDecoration: 'none' }}>
-                    <li onClick={() => setMenuOpen(false)}>Wallet</li>
+                <Link to="/profile" style={{ color: '#fff', textDecoration: 'none' }}>
+                    <li onClick={() => setMenuOpen(false)}>Profile</li>
                 </Link>
             </ul>
         </div>
