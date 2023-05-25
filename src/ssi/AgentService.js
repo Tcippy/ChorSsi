@@ -13,7 +13,7 @@ var invitation ={
     "recipientKeys": [
         "82GbRtGUCVVP5Stc19BC98hK667JzSDNwW8oCLo4JddF"
     ],
-    "serviceEndpoint": "http://172.17.0.1:8050"
+    "serviceEndpoint": "http://dockerLocalIP:8050"
 }
 const httpAsync =(options, body) =>{
     

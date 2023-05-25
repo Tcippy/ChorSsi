@@ -32,7 +32,7 @@ function createInvitation(port) {
             "recipientKeys": [
                 "9uoQv1r4r4W3U8ywRMUrVrYTsSKgtDEU6LgfQKHGX8jL"
             ],
-            "serviceEndpoint": "http://172.17.0.1:"+ entry[1].agentPort-1 
+            "serviceEndpoint": "http://dockerLocalIP:"+ entry[1].agentPort-1 
         }  */
         // });
     })
