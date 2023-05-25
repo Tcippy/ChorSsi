@@ -1,8 +1,8 @@
 #!/bin/bash
-/home/tommaso/von-network/manage down
-/home/tommaso/indy-tails-server-main/docker/manage down
-/home/tommaso/von-network/manage up
-/home/tommaso/indy-tails-server-main/docker/manage up
+/pathTo/von-network/manage down
+/pathTo/indy-tails-server-main/docker/manage down
+/pathTo/von-network/manage up
+/pathTo/indy-tails-server-main/docker/manage up
 
 sleep 10
 
