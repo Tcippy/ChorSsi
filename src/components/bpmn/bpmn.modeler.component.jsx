@@ -1,33 +1,16 @@
-import React, { Component } from 'react';
+import React from 'react';
 import 'bpmn-js/dist/assets/diagram-js.css';
 import 'bpmn-font/dist/css/bpmn-embedded.css';
 import 'chor-js/assets/styles/chor-js.css';
-//import '/icons/css/chor-editor.css';
-//import 'bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css';
 import { emptyBpmn } from '../../assets/empty.bpmn';
 import propertiesPanelModule from 'bpmn-js-properties-panel';
 import propertiesProviderModule from 'bpmn-js-properties-panel/lib/provider/bpmn';
-import ChorPropertiesProvider from '../../lib/properties-provider'
-import camundaModdleDescriptor from 'camunda-bpmn-moddle/resources/camunda';
 import "./bpmn.scss";
-import CustomRendererModule from '../renderer/CustomRenderer';
-import ColoredRendererModule from '../../lib/color-picker';
 import $ from 'jquery';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { saveAs } from "file-saver";
 import ChoreoModeler from 'chor-js/lib/Modeler';
-import Reporter from '../../lib/validator/Validator';
-import { response } from '../../ssi/AgentService';
-//import esm from 'esm';
 import magicPropertiesProviderModule from '../../lib/property-panel/provider/magic';
 import magicModdleDescriptor from '../../lib/property-panel/descriptors/magic';
-import CamundaModdlePackage from "camunda-bpmn-moddle/resources/camunda";
-import CamundaModdleExtension from "camunda-bpmn-moddle/lib";
-import CamundaPropertiesProviderModule from "bpmn-js-properties-panel/lib/provider/camunda";
-import SSIPage from '../SSIPage/SSIPage';
-import SpellProps from '../../lib/property-panel/provider/magic/parts/SpellProps';
 import { _agents, _mortgageSchema, _offerPropertySchema, _ownershipSchema } from "../../ssi/config";
-import { createCredDefAPI, createSchemaAPI } from "../../components/util/APIUtils";
 
 
 class BpmnModelerComponent extends React.Component {
@@ -272,7 +255,7 @@ class BpmnModelerComponent extends React.Component {
         <div id="bpmnview" style={{ width: '75%', height: '100%', float: 'left' }}></div>
         <div className="modelerBPMN">
           {/*          <Link to="/profile" className='link' style={{  textDecoration: 'none' }}>
-          */}        {/* <button className="downloadButton" onClick={() => { localStorage.setItem("toColour", " ") }} >Reset Colours
+          */}        {/*<button className="downloadButton" onClick={() => { localStorage.setItem("toColour", " ") }} >Reset Colours
           </button> 
           {/* <button className="downloadButton1" onClick={() => this.state.setPageOpen(this.isTrueSet)} >Status </button> */}
         </div>

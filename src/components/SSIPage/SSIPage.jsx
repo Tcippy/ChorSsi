@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, {  } from 'react';
 import Form from 'react-bootstrap/Form';
 import "./SSIPage.css";
-import $ from "jquery";
 //import Popper from "popper.js";
 import 'bootstrap/dist/js/bootstrap.bundle'
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import { _agents, _registryOffer, _proofRequest, _offerPropertySchema, _propertyOffer, _ownershipSchema, _mortgageSchema, _mortgageOffer, _mortgageRequest } from '../../ssi/config';
 import {
   getConnections, sendOfferAPI, getCredDefIdAPI, getCredDefExchangedAPI,
-  acceptOfferAPI, sendProofRequestAPI, getPresExchangeAPI, getValidCredentialAPI, sendPresentationAPI, createSchemaAPI, createCredDefAPI
-} from '../util/APIUtils';
+  acceptOfferAPI, sendProofRequestAPI, getPresExchangeAPI, getValidCredentialAPI, sendPresentationAPI} from '../util/APIUtils';
 
 import {
   MDBBtn,
@@ -18,11 +16,7 @@ import {
   MDBCol,
   MDBCard,
   MDBCardBody,
-  MDBTextArea,
-  MDBSelect,
-  MDBInput,
-  MDBCheckbox
-}
+  MDBTextArea}
   from 'mdb-react-ui-kit';
 
 
